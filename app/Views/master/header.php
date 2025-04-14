@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Chibomi | <?= esc($title ?? '') ?></title>
+    <title>Chibomi <?= esc(empty($title)? '' : '| '.$title) ?></title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -46,7 +46,7 @@
                                             <li><a href="<?php echo base_url('/')?>">Beranda</a></li>
                                             <li><a href="<?php echo base_url('/toko')?>">Toko</a></li>
                                             <li><a href="<?php echo base_url('/portofolio')?>">Portofolio</a></li>
-                                            <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</a></li>
+                                            <!-- <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</a></li> -->
                                             <li><a href="<?php echo base_url('/kontak')?>">Kontak</a></li>
                                         </ul>
                                     </div>
@@ -83,7 +83,7 @@
                                             <?php if ((session()->has('role') == 'Pemilik') || (session()->has('role') == 'Admin')): ?>
                                                 <li><a href="<?= base_url('/admin') ?>">Mode Admin</a></li>
                                             <?php endif; ?>
-                                            <li><a href="<?= base_url('/logout') ?>">Logout</a></li>
+                                            <li><a class="logout" href="<?= base_url('/logout') ?>">Logout</a></li>
                                         </div>
                                         <?php else: ?>
                                         <div class="auth-links">
@@ -142,7 +142,7 @@
                         <li><a href="<?php echo base_url('/')?>">Beranda</a></li>
                         <li><a href="<?php echo base_url('/toko')?>">Toko</a></li>
                         <li><a href="<?php echo base_url('/portofolio')?>">Portofolio</a></li>
-                        <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</li>
+                        <!-- <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</li> -->
                         <li><a href="<?php echo base_url('/kontak')?>">Kontak</a></li>
                     </ul>
                 </div>

@@ -563,6 +563,9 @@ ol li {
 .ltn__primary-color-3 {
   color: var(--ltn__primary-color-3) !important; }
 
+.ltn__primary-color-4 {
+  color: var(--ltn__primary-color-4) !important; }
+
 .ltn__secondary-color {
   color: var(--ltn__secondary-color) !important; }
 
@@ -1193,7 +1196,7 @@ ul {
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg); }
   #scrollUp:hover {
-    background-color: var(--ltn__secondary-color);
+    background-color: var(--ltn__primary-color-4);
     color: var(--white); }
 
 /* ----------------------------------------------------
@@ -3582,7 +3585,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   .top-rated-product-info .product-price {
     margin-bottom: 0;
     font-size: 14px;
-    color: var(--ltn__secondary-color);
+    color: var(--ltn__primary-color-4);
     font-weight: 700; }
 
 /* ----------------------------------------------------
@@ -4473,7 +4476,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     margin-bottom: 5px; }
   .menu-product-item .product-price {
     font-size: 16px;
-    color: var(--ltn__secondary-color);
+    color: var(--ltn__primary-color-4);
     font-weight: 600; }
     .menu-product-item .product-price del {
       font-size: 15px;
@@ -6638,7 +6641,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   font-weight: 700; }
 
 .product-hover-action li:hover a {
-  background-color: var(--ltn__secondary-color);
+  background-color: var(--ltn__primary-color-4);
   color: var(--white); }
 
 .product-badge {
@@ -6760,7 +6763,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     margin-bottom: 3px; }
   .ltn__product-item-3 .product-price {
     font-size: 20px;
-    color: var(--ltn__secondary-color);
+    color: var(--ltn__primary-color-4);
     font-weight: 700; }
     .ltn__product-item-3 .product-price del {
       font-size: 20px;
@@ -6869,7 +6872,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 .modal-product-info .product-price {
   font-size: 50px;
   margin-bottom: 10px;
-  color: var(--ltn__secondary-color);
+  color: var(--ltn__primary-color-4);
   line-height: 1.2;
   font-weight: 600; }
 
@@ -7043,7 +7046,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     box-shadow: var(--ltn__box-shadow-1);
     border-color: transparent; }
   .ltn__small-product-item .product-price {
-    color: var(--ltn__secondary-color); }
+    color: var(--ltn__primary-color-4); }
 
 .small-product-item-img {
   max-width: 90px;
@@ -7776,7 +7779,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     padding: 0 0 0 30px;
     border-width: 0 0 0 2px;
     border-style: solid;
-    border-color: var(--ltn__secondary-color);
+    border-color: var(--ltn__primary-color-4);
     max-width: 450px; }
   .ltn__section-title-2.text-right p {
     padding: 0 30px 0 0;
@@ -7928,7 +7931,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     bottom: 0;
     width: 0%;
     height: 4px;
-    background-color: var(--ltn__secondary-color);
+    background-color: var(--ltn__primary-color-4);
     -webkit-transition: all 0.5s ease 0s;
     -o-transition: all 0.5s ease 0s;
     transition: all 0.5s ease 0s;
@@ -7942,7 +7945,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
       opacity: 1;
       visibility: visible; }
     .ltn__category-item-3:hover h5 {
-      color: var(--ltn__secondary-color); }
+      color: var(--ltn__primary-color-4); }
 
 @media (max-width: 768px) {
   .ltn__category-item-2 .ltn__category-item-img {
@@ -8494,7 +8497,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   .ltn__blog-category a:last-child {
     margin-right: 0; }
   .ltn__blog-category a:hover {
-    background-color: var(--ltn__primary-color);
+    background-color: var(--ltn__primary-color-4);
     color: var(--white); }
 
 .ltn__blog-meta-btn {
@@ -12485,7 +12488,7 @@ input.cart-plus-minus-box {
       -o-transition: all 0.3s ease 0s;
       transition: all 0.3s ease 0s; }
       .preloader-inner .cancel-preloader a:hover {
-        background-color: var(--ltn__secondary-color);
+        background-color: var(--ltn__primary-color-4);
         color: var(--white); }
 
 .spinner {
@@ -12566,17 +12569,17 @@ input.cart-plus-minus-box {
     margin-right: 0; }
 
 .theme-btn-1 {
-  background-color: var(--ltn__secondary-color);
+  background-color: var(--ltn__primary-color-4);
   color: var(--white); }
   .theme-btn-1:hover {
-    background-color: var(--ltn__primary-color);
+    background-color: var(--ltn__primary-color-4);
     color: var(--white); }
 
 .theme-btn-2 {
   background-color: var(--ltn__primary-color);
   color: var(--white); }
   .theme-btn-2:hover {
-    background-color: var(--ltn__secondary-color);
+    background-color: var(--ltn__primary-color-4);
     color: var(--white); }
 
 .theme-btn-3 {

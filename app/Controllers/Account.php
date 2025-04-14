@@ -21,12 +21,10 @@ class Account extends BaseController
     // Register Pengguna
     public function indexRegister()
     {
-        return view('master/header')
-            . view('account/registrasi', [
+        return view('account/registrasi', [
                 'errors' => session()->getFlashdata('errors'),
                 'error' => session()->getFlashdata('error'),
-            ])
-            . view('master/footer');
+            ]);
     }
 
     public function register()
@@ -139,17 +137,14 @@ class Account extends BaseController
         return redirect()->to('/login')->with('message', 'Verifikasi berhasil! Silakan login.');
     }
 
-
     // Login
     public function indexLogin()
     {
-        return view('master/header')
-            . view('account/login', [
+        return view('account/login', [
                 'errors' => session()->getFlashdata('errors'),
                 'error'  => session()->getFlashdata('error'),
                 'message' => session()->getFlashdata('message'),
-            ])
-            . view('master/footer');
+            ]);
     }
 
     public function login()
@@ -194,6 +189,7 @@ class Account extends BaseController
             'email'      => $user['email'],
             'nama'       => $user['nama'],
             'role'       => $user['role'],
+            'telepon'    => $user['telepon'],
             'isLoggedIn' => true,
         ]);
 
@@ -206,5 +202,154 @@ class Account extends BaseController
         $session = \Config\Services::session();
         $session->destroy();
         return redirect()->to('/login');
+    }
+
+    // Profil
+    public function indexProfil()
+    {
+        return view('account/profil');
+    }
+
+    public function updateProfil()
+    {
+        $validation = \Config\Services::validation();
+        $accountModel = new \App\Models\AccountModel();
+
+        $userId = session()->get('id_account');
+        $user = $accountModel->find($userId);
+
+        $input = $this->request->getPost();
+
+        // Aturan validasi awal
+        $rules = [
+            'nama' => 'required|min_length[3]',
+            'telepon' => 'required|numeric|min_length[10]',
+            'email' => 'required|valid_email',
+        ];
+
+        // Jika email berubah, validasi keunikan
+        if ($input['email'] !== $user['email']) {
+            $rules['email'] .= '|is_unique[accounts.email]';
+        }
+
+        // Jika password diisi, tambahkan validasi password
+        if (!empty($input['password']) || !empty($input['password_lama'])) {
+            $rules['password_lama'] = 'required';
+            $rules['password'] = 'required|min_length[6]';
+            $rules['confirm_password'] = 'matches[password]';
+        }
+
+        // Pesan error dalam Bahasa Indonesia
+        $validation->setRules($rules, [
+            'nama' => [
+                'required' => 'Nama wajib diisi.',
+                'min_length' => 'Nama minimal 3 karakter.'
+            ],
+            'telepon' => [
+                'required' => 'Telepon wajib diisi.',
+                'numeric' => 'Telepon harus berupa angka.',
+                'min_length' => 'Telepon minimal 10 digit.'
+            ],
+            'email' => [
+                'required' => 'Email wajib diisi.',
+                'valid_email' => 'Email tidak valid.',
+                'is_unique' => 'Email sudah digunakan.'
+            ],
+            'password_lama' => [
+                'required' => 'Password lama wajib diisi.'
+            ],
+            'password' => [
+                'required' => 'Password baru wajib diisi.',
+                'min_length' => 'Password minimal 6 karakter.'
+            ],
+            'confirm_password' => [
+                'matches' => 'Konfirmasi password tidak cocok.'
+            ],
+        ]);
+
+        // Jalankan validasi
+        if (!$validation->withRequest($this->request)->run()) {
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors())->with('error', 'Profil gagal diperbarui. Silakan coba lagi dengan ketentuan yang berlaku.');
+        }
+
+        // Siapkan data yang akan diupdate
+        $updateData = [];
+
+        if ($input['nama'] !== $user['nama']) {
+            $updateData['nama'] = $input['nama'];
+        }
+
+        if ($input['telepon'] !== $user['telepon']) {
+            $updateData['telepon'] = $input['telepon'];
+        }
+
+        // Email berubah → perlu verifikasi ulang
+        if ($input['email'] !== $user['email']) {
+            $updateData['email'] = $input['email'];
+            $updateData['status'] = 'Emailverif';
+
+            // Kirim email verifikasi
+            $email = \Config\Services::email();
+            $email->setTo($input['email']);
+            $email->setSubject('Verifikasi Akun Anda');
+            $email->setMailType('html');
+
+            $link = base_url("verifikasi/" . md5($input['email']));
+            $message = "
+                <p>Halo <b>{$input['nama']}</b>,</p>
+                <p>Klik tombol berikut untuk verifikasi akun Anda:</p>
+                <p><a href='{$link}' style='padding:10px 20px; background-color:#FFB200; color:white;'>Verifikasi Akun</a></p>
+                <p>Atau salin link ini: <br> {$link}</p>
+            ";
+            $email->setMessage($message);
+            $email->send();
+
+            $accountModel->update($userId, $updateData);
+
+            // Hancurkan session dan minta login ulang
+            session()->destroy();
+            return redirect()->to('/login')->with('success', 'Email diubah, silakan verifikasi ulang melalui email.');
+        }
+
+        // Ubah password jika diisi
+        if (!empty($input['password'])) {
+            // Cek password lama
+            if (!password_verify($input['password_lama'], $user['password'])) {
+                return redirect()->back()->withInput()->with('errors', [
+                    'password_lama' => ['Password lama salah.']
+                ]);
+            }
+
+            $updateData['password'] = password_hash($input['password'], PASSWORD_DEFAULT);
+        }
+
+        // Jika tidak ada perubahan, beri pesan
+        if (empty($updateData)) {
+            return redirect()->back()->withInput()->with('errors', [
+                'form' => ['Tidak ada perubahan yang disimpan.']
+            ]);
+        }
+
+        // Simpan perubahan
+        $accountModel->update($userId, $updateData);
+
+        // Perbarui session
+        $newData = $accountModel->find($userId);
+        session()->set([
+            'id_account' => $newData['id_account'],
+            'email'      => $newData['email'],
+            'nama'       => $newData['nama'],
+            'role'       => $newData['role'],
+            'telepon'    => $newData['telepon'],
+            'isLoggedIn' => true,
+        ]);
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    // Lamat Pengguna
+    public function indexAlamat()
+    {
+        return view('account/alamat');
     }
 }

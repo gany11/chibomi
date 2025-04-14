@@ -1,3 +1,8 @@
+<?php
+echo view('master\header', [
+    'title' => 'Masuk'
+]);?>
+
 <!-- BREADCRUMB AREA START -->
 <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-image" data-bg="<?= base_url('assets/img/bg/breadcrumb.png') ?>">
     <div class="container">
@@ -83,3 +88,5 @@
     </div>
 </div>
 <!-- LOGIN AREA END -->
+
+<?php echo view('master\footer'); ?>
