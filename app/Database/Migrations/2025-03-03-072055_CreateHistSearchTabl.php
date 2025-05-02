@@ -28,16 +28,6 @@ class CreateHistSearchTable extends Migration
                 'constraint' => 255,
                 'null' => false
             ],
-            // 'created_at' => [
-            //     'type' => 'DATETIME',
-            //     'null' => false,
-            //     'default' => 'CURRENT_TIMESTAMP'
-            // ],
-            // 'updated_at' => [
-            //     'type' => 'DATETIME',
-            //     'null' => true,
-            //     'on update' => 'CURRENT_TIMESTAMP'
-            // ]
         ]);
 
         $this->forge->addKey('id_hist_search', true);

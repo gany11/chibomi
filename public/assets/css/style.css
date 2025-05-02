@@ -409,6 +409,9 @@ a:active {
 a:hover {
   color: var(--ltn__primary-color-4); }
 
+.primary-color-4 {
+  color: var(--ltn__primary-color-4); }
+
 button,
 input,
 optgroup,
@@ -1342,8 +1345,8 @@ ul {
   border: 1px solid var(--border-color-1);
   text-align: center; }
   .slick-arrow-2 .slick-arrow:hover {
-    background-color: var(--ltn__secondary-color);
-    border-color: var(--ltn__secondary-color);
+    background-color: var(--ltn__primary-color-4);
+    border-color: var(--ltn__primary-color-4);
     color: var(--white) !important; }
 
 .slick-arrow-2 .slick-next {
@@ -4549,7 +4552,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   .ltn__header-options-2 .header-search-1:hover,
   .ltn__header-options-2 .ltn__drop-menu > ul > li > a:hover,
   .ltn__header-options-2 .mini-cart-icon a:hover,
-  .ltn__header-options-2 .header-wishlist:hover {
+  .ltn__header-options-2 .header-wishlist:hover{
     background: var(--ltn__primary-color-4);
     color: var(--ltn__primary-color-4); }
 
@@ -6590,7 +6593,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   font-size: 12px; }
   .product-ratting li.review-total {
     margin-left: 3px;
-    color: var(--ltn__secondary-color); }
+    color: var(--ltn__primary-color-4); }
 
 .product-hover-action {
   position: absolute;
@@ -7094,7 +7097,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   .ltn__shop-details-small-img .single-small-img {
     padding: 0 5px; }
     .ltn__shop-details-small-img .single-small-img.slick-current img {
-      border: 1px solid var(--ltn__secondary-color);
+      border: 1px solid var(--ltn__primary-color-4);
       margin-bottom: 10px; }
 
 .ltn__shop-details-small-img.slick-arrow-2 {
@@ -7177,10 +7180,10 @@ ul.wp-block-latest-posts.is-grid.alignwide {
         -o-transition: all 0.3s ease 0s;
         transition: all 0.3s ease 0s; }
       .ltn__shop-details-tab-inner-2 .ltn__shop-details-tab-menu .nav a.active {
-        color: var(--ltn__secondary-color);
+        color: var(--ltn__primary-color-4);
         background-color: transparent; }
         .ltn__shop-details-tab-inner-2 .ltn__shop-details-tab-menu .nav a.active::before {
-          background-color: var(--ltn__secondary-color);
+          background-color: var(--ltn__primary-color-4);
           width: 100%; }
 
 .ltn__shop-details-tab-inner-2 .ltn__shop-details-tab-content-inner {
@@ -9873,9 +9876,6 @@ input.cart-plus-minus-box {
 
 .cart-product-remove {
   cursor: pointer; }
-
-.cart-product-remove:hover {
-  color: var(--ltn__secondary-color); }
 
 .cart-product-subtotal {
   font-weight: 700; }

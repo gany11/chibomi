@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Chibomi <?= esc(empty($title)? '' : '| '.$title) ?></title>
+    <title><?= esc(empty($title)? '' : $title. ' | ') ?>Chibomi</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -34,7 +34,7 @@
                         <div class="col">
                             <div class="site-logo-wrap">
                                 <div class="site-logo">
-                                    <!-- <a href="index.html"><img src="img/logo-2.png" alt="Logo"></a> -->
+                                    <a href="index.html"><img src="<?php echo base_url('assets/img/logo-2.png')?>" alt="Logo"></a>
                                 </div>
                             </div>
                         </div>
@@ -44,9 +44,8 @@
                                     <div class="ltn__main-menu">
                                         <ul>
                                             <li><a href="<?php echo base_url('/')?>">Beranda</a></li>
-                                            <li><a href="<?php echo base_url('/toko')?>">Toko</a></li>
+                                            <li><a href="<?php echo base_url('/produk')?>">Produk</a></li>
                                             <li><a href="<?php echo base_url('/portofolio')?>">Portofolio</a></li>
-                                            <!-- <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</a></li> -->
                                             <li><a href="<?php echo base_url('/kontak')?>">Kontak</a></li>
                                         </ul>
                                     </div>
@@ -80,7 +79,7 @@
                                         <?php if (session()->has('id_account')): ?>
                                         <div class="user-info">
                                             <li><a href="<?= base_url('/profil') ?>">Profil</a></li>
-                                            <?php if ((session()->has('role') == 'Pemilik') || (session()->has('role') == 'Admin')): ?>
+                                            <?php if ((session()->get('role') === "Pemilik") || (session()->get('role') === "Admin")): ?>
                                                 <li><a href="<?= base_url('/admin') ?>">Mode Admin</a></li>
                                             <?php endif; ?>
                                             <li><a class="logout" href="<?= base_url('/logout') ?>">Logout</a></li>
@@ -96,7 +95,7 @@
                                 </ul>
                             </div>
                             <!-- cart -->
-                            <?php if (session()->has('id_account') && (session()->has('role') === 'Pelanggan')): ?>
+                            <?php if (session()->get('id_account') && (session()->get('role') === "Pelanggan")): ?>
                             <div class="mini-cart-icon">
                                 <a href="<?= base_url('/keranjang') ?>">
                                     <i class="icon-shopping-cart"></i>
@@ -140,7 +139,7 @@
                 <div class="ltn__utilize-menu">
                     <ul>
                         <li><a href="<?php echo base_url('/')?>">Beranda</a></li>
-                        <li><a href="<?php echo base_url('/toko')?>">Toko</a></li>
+                        <li><a href="<?php echo base_url('/produk')?>">Produk</a></li>
                         <li><a href="<?php echo base_url('/portofolio')?>">Portofolio</a></li>
                         <!-- <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</li> -->
                         <li><a href="<?php echo base_url('/kontak')?>">Kontak</a></li>

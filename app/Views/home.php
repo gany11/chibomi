@@ -82,7 +82,7 @@ echo view('master\header', [
                     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
                         <div class="ltn__product-item ltn__product-item-3 text-center h-100">
                             <div class="product-img">
-                                <a href="#"><img src="<?php echo base_url('assets/img/product/11.png')?>" alt="Keychain Design"></a>
+                                <a href="#"><img src="<?php echo base_url('assets/img/product/1.png')?>" alt="Keychain Design"></a>
                                 <!-- Optional badge -->
                                 <!-- <div class="product-badge">
                                     <ul>
@@ -124,7 +124,7 @@ echo view('master\header', [
                     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
                         <div class="ltn__product-item ltn__product-item-3 text-center h-100">
                             <div class="product-img">
-                                <a href="#"><img src="<?php echo base_url('assets/img/product/11.png')?>" alt="Keychain Design"></a>
+                                <a href="#"><img src="<?php echo base_url('assets/img/product/1.png')?>" alt="Keychain Design"></a>
                                 <!-- Optional badge -->
                                 <!-- <div class="product-badge">
                                     <ul>
@@ -166,7 +166,7 @@ echo view('master\header', [
                     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
                         <div class="ltn__product-item ltn__product-item-3 text-center h-100">
                             <div class="product-img">
-                                <a href="#"><img src="<?php echo base_url('assets/img/product/11.png')?>" alt="Keychain Design"></a>
+                                <a href="#"><img src="<?php echo base_url('assets/img/product/1.png')?>" alt="Keychain Design"></a>
                                 <!-- Optional badge -->
                                 <!-- <div class="product-badge">
                                     <ul>
@@ -208,7 +208,7 @@ echo view('master\header', [
                     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
                         <div class="ltn__product-item ltn__product-item-3 text-center h-100">
                             <div class="product-img">
-                                <a href="#"><img src="<?php echo base_url('assets/img/product/11.png')?>" alt="Keychain Design"></a>
+                                <a href="#"><img src="<?php echo base_url('assets/img/product/1.png')?>" alt="Keychain Design"></a>
                                 <!-- Optional badge -->
                                 <!-- <div class="product-badge">
                                     <ul>
@@ -269,7 +269,7 @@ echo view('master\header', [
                 <div class="ltn__category-item ltn__category-item-3 text-center">
                     <div class="ltn__category-item-img">
                         <a href="<?php echo base_url('shop') ?>">
-                            <img src="<?php echo base_url('assets/img/icons/icon-img/category-all.png') ?>" alt="Semua Produk">
+                            <img src="<?php echo base_url('assets/img/product/2.png') ?>" alt="Semua Produk">
                         </a>
                     </div>
                     <div class="ltn__category-item-name">
@@ -283,7 +283,7 @@ echo view('master\header', [
                 <div class="ltn__category-item ltn__category-item-3 text-center">
                     <div class="ltn__category-item-img">
                         <a href="<?php echo base_url('shop/gantungan-kunci') ?>">
-                            <img src="<?php echo base_url('assets/img/icons/icon-img/keychain.png') ?>" alt="Gantungan Kunci">
+                            <img src="<?php echo base_url('assets/img/product/2.png') ?>" alt="Gantungan Kunci">
                         </a>
                     </div>
                     <div class="ltn__category-item-name">
@@ -297,7 +297,7 @@ echo view('master\header', [
                 <div class="ltn__category-item ltn__category-item-3 text-center">
                     <div class="ltn__category-item-img">
                         <a href="<?php echo base_url('shop/stiker') ?>">
-                            <img src="<?php echo base_url('assets/img/icons/icon-img/sticker.png') ?>" alt="Stiker">
+                            <img src="<?php echo base_url('assets/img/product/2.png') ?>" alt="Stiker">
                         </a>
                     </div>
                     <div class="ltn__category-item-name">
@@ -311,7 +311,7 @@ echo view('master\header', [
                 <div class="ltn__category-item ltn__category-item-3 text-center">
                     <div class="ltn__category-item-img">
                         <a href="<?php echo base_url('shop/poster') ?>">
-                            <img src="<?php echo base_url('assets/img/icons/icon-img/poster.png') ?>" alt="Poster">
+                            <img src="<?php echo base_url('assets/img/product/2.png') ?>" alt="Poster">
                         </a>
                     </div>
                     <div class="ltn__category-item-name">
@@ -325,7 +325,7 @@ echo view('master\header', [
                 <div class="ltn__category-item ltn__category-item-3 text-center">
                     <div class="ltn__category-item-img">
                         <a href="<?php echo base_url('shop/jasa-desain') ?>">
-                            <img src="<?php echo base_url('assets/img/icons/icon-img/design-service.png') ?>" alt="Jasa Desain">
+                            <img src="<?php echo base_url('assets/img/product/2.png') ?>" alt="Jasa Desain">
                         </a>
                     </div>
                     <div class="ltn__category-item-name">
@@ -339,7 +339,7 @@ echo view('master\header', [
                 <div class="ltn__category-item ltn__category-item-3 text-center">
                     <div class="ltn__category-item-img">
                         <a href="<?php echo base_url('shop/custom') ?>">
-                            <img src="<?php echo base_url('assets/img/icons/icon-img/custom.png') ?>" alt="Produk Custom">
+                            <img src="<?php echo base_url('assets/img/product/2.png') ?>" alt="Produk Custom">
                         </a>
                     </div>
                     <div class="ltn__category-item-name">
@@ -354,7 +354,7 @@ echo view('master\header', [
 <!-- CATEGORY AREA END -->
 
 <!-- COUNTER UP AREA START -->
-<div class="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-115 pb-70" data-bg="img/bg/5.jpg">
+<!-- <div class="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-115 pb-70" data-bg="img/bg/5.jpg">
     <div class="container">
         <div class="row">
             <div class="col-md-3 col-sm-6 align-self-center">
@@ -387,11 +387,11 @@ echo view('master\header', [
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- COUNTER UP AREA END -->
 
 <!-- PRODUCT AREA START (product-item-3) -->
-<div class="ltn__product-area ltn__product-gutter pt-115 pb-70">
+<!-- <div class="ltn__product-area ltn__product-gutter pt-115 pb-70">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -401,7 +401,6 @@ echo view('master\header', [
             </div>
         </div>
         <div class="row ltn__tab-product-slider-one-active--- slick-arrow-1">
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-left">
                     <div class="product-img">
@@ -448,7 +447,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-left">
                     <div class="product-img">
@@ -490,7 +488,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -537,7 +534,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -584,7 +580,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -631,7 +626,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -678,7 +672,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -725,7 +718,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- ltn__product-item -->
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                     <div class="product-img">
@@ -772,14 +764,13 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!--  -->
         </div>
     </div>
-</div>
+</div> -->
 <!-- PRODUCT AREA END -->
 
 <!-- CALL TO ACTION START (call-to-action-4) -->
-<div class="ltn__call-to-action-area ltn__call-to-action-4 bg-image pt-115 pb-120" data-bg="img/bg/6.jpg">
+<!-- <div class="ltn__call-to-action-area ltn__call-to-action-4 bg-image pt-115 pb-120" data-bg="img/bg/6.jpg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -800,13 +791,13 @@ echo view('master\header', [
         <img src="<?php echo base_url('assets/img/bg/12.png') ?>" alt="#">
     </div>
     <div class="ltn__call-to-4-img-2">
-        <img src="<?php echo base_url('assets/img/bg/11.png') ?>" alt="#">
+        <img src="<?php echo base_url('assets/img/bg/1.png') ?>" alt="#">
     </div>
-</div>
+</div> -->
 <!-- CALL TO ACTION END -->
 
 <!-- BLOG AREA START (blog-3) -->
-<div class="ltn__blog-area pt-115 pb-70">
+<!-- <div class="ltn__blog-area pt-115 pb-70">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -846,7 +837,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- Blog Item -->
             <div class="col-lg-12">
                 <div class="ltn__blog-item ltn__blog-item-3">
                     <div class="ltn__blog-img">
@@ -877,7 +867,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- Blog Item -->
             <div class="col-lg-12">
                 <div class="ltn__blog-item ltn__blog-item-3">
                     <div class="ltn__blog-img">
@@ -908,7 +897,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- Blog Item -->
             <div class="col-lg-12">
                 <div class="ltn__blog-item ltn__blog-item-3">
                     <div class="ltn__blog-img">
@@ -939,7 +927,6 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!-- Blog Item -->
             <div class="col-lg-12">
                 <div class="ltn__blog-item ltn__blog-item-3">
                     <div class="ltn__blog-img">
@@ -970,14 +957,13 @@ echo view('master\header', [
                     </div>
                 </div>
             </div>
-            <!--  -->
         </div>
     </div>
-</div>
+</div> -->
 <!-- BLOG AREA END -->
 
 <!-- FEATURE AREA START ( Feature - 3) -->
-<div class="ltn__feature-area before-bg-bottom-2-- mb--30--- plr--5 mb-120">
+<!-- <div class="ltn__feature-area before-bg-bottom-2-- mb--30--- plr--5 mb-120">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
@@ -986,7 +972,7 @@ echo view('master\header', [
                         <div class="col-xl-3 col-md-6 col-12">
                             <div class="ltn__feature-item ltn__feature-item-8">
                                 <div class="ltn__feature-icon">
-                                    <img src="<?php echo base_url('assets/img/icons/icon-img/11.png') ?>" alt="#">
+                                    <img src="<?php echo base_url('assets/img/icons/icon-img/1.png') ?>" alt="#">
                                 </div>
                                 <div class="ltn__feature-info">
                                     <h4>Curated Products</h4>
@@ -1036,11 +1022,11 @@ echo view('master\header', [
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- FEATURE AREA END -->
 
 <!-- FAQ AREA START (faq-2) (ID > accordion_2) -->
-<div class="ltn__faq-area mb-100" id="faq">
+<div class="ltn__faq-area mb-100 pt-90 id="faq">
     <div class="container">
         <div class="section-title-area ltn__section-title-2 text-center">
             <h1 class="section-title">FAQ</h1>

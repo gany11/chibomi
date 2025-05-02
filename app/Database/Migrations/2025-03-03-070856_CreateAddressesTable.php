@@ -58,16 +58,6 @@ class CreateAddressesTable extends Migration
                 'constraint' => 5,
                 'null' => false
             ],
-            // 'created_at' => [
-            //     'type' => 'DATETIME',
-            //     'null' => false,
-            //     'default' => 'CURRENT_TIMESTAMP'
-            // ],
-            // 'updated_at' => [
-            //     'type' => 'DATETIME',
-            //     'null' => true,
-            //     'on update' => 'CURRENT_TIMESTAMP'
-            // ]
         ]);
 
         $this->forge->addKey('id_address', true);

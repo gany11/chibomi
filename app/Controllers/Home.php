@@ -11,6 +11,12 @@ class Home extends BaseController
     }
 
     // Beranda
+    public function indexBerandaAdmin()
+    {
+        return view('admin/chibomi/index');
+    }
+
+    // Kontak
     public function indexKontak()
     {
         return view('kontak');

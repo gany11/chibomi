@@ -1,6 +1,6 @@
 <?php
 echo view('master\header', [
-    'title' => 'Profil Akun'
+    'title' => 'Alamat Saya'
 ]);?>
 
 <!-- BREADCRUMB AREA START -->
@@ -10,7 +10,7 @@ echo view('master\header', [
             <div class="col-lg-12">
                 <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
                     <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title black-color">Akun</h1>
+                        <h1 class="section-title black-color">Alamat Saya</h1>
                     </div>
                     <div class="ltn__breadcrumb-list">
                         <ul>
@@ -40,28 +40,72 @@ echo view('master\header', [
                             ]);?>
                             <div class="col-lg-8">
                                 <div class="tab-content">
-                                    <div class="tab-pane fade active show">
-                                        <div class="ltn__myaccount-tab-content-inner">
-                                            <p>The following addresses will be used on the checkout page by default.</p>
-                                            <div class="row">
+                                    <div class="tab-pane fade active show"><div class="ltn__myaccount-tab-content-inner">
+
+                                        <?php if (session()->has('error')): ?>
+                                            <div class="alert alert-danger"><?= session('error') ?></div>
+                                        <?php endif; ?>
+                                        <?php if (session()->has('success')): ?>
+                                            <div class="alert alert-success"><?= session('success') ?></div>
+                                        <?php endif; ?>
+                                        <?php if (count($alamat) === 0): ?>
+                                            <div class="alert alert-warning" role="alert">
+                                                Anda belum memiliki alamat tersimpan. Silakan tambahkan minimal 1 alamat pengiriman.
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <div class="by-agree text-end">
+                                            <h4>
+                                                <a class="theme-btn-4 btn btn-block <?= count($alamat) >= 3 ? 'disabled' : '' ?>" 
+                                                href="<?= base_url('alamat/tambah') ?>">
+                                                Tambah Alamat Baru
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <p>Anda dapat mendaftarkan hingga 3 alamat.</p>
+
+                                        <div class="row">
+                                            <?php foreach ($alamat as $index => $a): ?>
                                                 <div class="col-md-6 col-12 learts-mb-30">
-                                                    <h4>Billing Address <small><a href="#">edit</a></small></h4>
+                                                    <h4>
+                                                        Alamat <?= $index + 1 ?>
+                                                        <small class="m-3">
+                                                            <a class="primary-color-4 m-2" href="<?= base_url('alamat/ubah/' . $a['id_address']) ?>">Edit</a>
+                                                            <?php if (count($alamat) > 1): ?>
+                                                                | <a href="#" 
+                                                                    class="text-danger m-2 btn-hapus-alamat" 
+                                                                    data-id="<?= $a['id_address'] ?>" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target="#hapusModal">Hapus</a>
+                                                            <?php endif; ?>
+                                                        </small>
+                                                    </h4>
                                                     <address>
-                                                        <p><strong>Alex Tuntuni</strong></p>
-                                                        <p>1355 Market St, Suite 900 <br>
-                                                            San Francisco, CA 94103</p>
-                                                        <p>Mobile: (123) 456-7890</p>
+                                                        <p><strong><?= esc($a['nama_penerima']) ?></strong></p>
+                                                        <p><?= esc($a['alamat_lengkap']) ?></p>
+                                                        <p><?= esc($a['kecamatan']) ?>, <?= esc($a['kelurahan']) ?></p>
+                                                        <p><?= esc($a['kota_kabupaten']) ?>, <?= esc($a['provinsi']) ?> - <?= esc($a['kode_pos']) ?></p>
+                                                        <p>Telepon: <?= esc($a['telp_penerima']) ?></p>
                                                     </address>
                                                 </div>
-                                                <div class="col-md-6 col-12 learts-mb-30">
-                                                    <h4>Shipping Address <small><a href="#">edit</a></small></h4>
-                                                    <address>
-                                                        <p><strong>Alex Tuntuni</strong></p>
-                                                        <p>1355 Market St, Suite 900 <br>
-                                                            San Francisco, CA 94103</p>
-                                                        <p>Mobile: (123) 456-7890</p>
-                                                    </address>
-                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal Konfirmasi Hapus -->
+                            <div class="modal fade" id="hapusModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-md" role="document">
+                                    <div class="modal-content text-center p-4">
+                                        <div class="modal-header border-0 justify-content-end">
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="mb-3">Apakah Anda yakin ingin menghapus alamat ini?</h4>
+                                            <div class="btn-wrapper d-flex justify-content-center gap-3">
+                                                <a href="#" id="confirmHapus" class="btn btn-danger">Ya, Hapus</a>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                             </div>
                                         </div>
                                     </div>
@@ -78,3 +122,17 @@ echo view('master\header', [
 <!-- WISHLIST AREA START -->
 
 <?php echo view('master\footer'); ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hapusLinks = document.querySelectorAll('.btn-hapus-alamat');
+        const confirmBtn = document.getElementById('confirmHapus');
+
+        hapusLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                const idAlamat = this.getAttribute('data-id');
+                confirmBtn.href = `<?= base_url('alamat/hapus/') ?>${idAlamat}`;
+            });
+        });
+    });
+</script>
+

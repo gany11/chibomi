@@ -10,7 +10,7 @@ echo view('master\header', [
             <div class="col-lg-12">
                 <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
                     <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title black-color">Akun</h1>
+                        <h1 class="section-title black-color">Login</h1>
                     </div>
                     <div class="ltn__breadcrumb-list">
                         <ul>

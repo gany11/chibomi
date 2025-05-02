@@ -29,17 +29,7 @@ class CreateDeliveryServiceTable extends Migration
                 'constraint' => ['Aktif', 'Pasif'],
                 'null' => false,
                 'default' => 'Aktif'
-            ],
-            // 'created_at' => [
-            //     'type' => 'DATETIME',
-            //     'null' => false,
-            //     'default' => 'CURRENT_TIMESTAMP'
-            // ],
-            // 'updated_at' => [
-            //     'type' => 'DATETIME',
-            //     'null' => true,
-            //     'on update' => 'CURRENT_TIMESTAMP'
-            // ]
+            ]
         ]);
 
         $this->forge->addKey('id_delivery_service', true);

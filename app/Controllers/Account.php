@@ -85,34 +85,6 @@ class Account extends BaseController
         return redirect()->to('/login')->with('message', 'Registrasi berhasil. Cek email Anda untuk verifikasi.');
     }
 
-    // Register Admin
-    public function indexRegisterAdmin()
-    {
-        return view('auth/register_admin');
-    }
-
-    public function registerAdmin()
-    {
-        $data = $this->request->getPost();
-
-        if (!$this->validate([
-            'email' => 'required|valid_email|is_unique[accounts.email]',
-            'nama' => 'required|string|max_length[255]',
-            'telepon' => 'required|regex_match[/^[0-9]{10,20}$/]',
-            'password' => 'required|min_length[8]'
-        ])) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        $data = array_map('htmlspecialchars', $data);
-        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        $data['status_akun'] = 'Aktif';
-        $data['role'] = 'Admin';
-        
-        $this->accountModel->insert($data);
-        return redirect()->to('/login')->with('message', 'Admin berhasil didaftarkan.');
-    }
-
     // Verifikasi Email
     public function verifyEmail($token)
     {
@@ -122,19 +94,16 @@ class Account extends BaseController
             ->first();
 
         if (!$account) {
-            // Email tidak ditemukan (token tidak valid)
             return redirect()->to('/login')->with('error', 'Link verifikasi tidak valid atau akun tidak ditemukan.');
         }
 
         if ($account['status_akun'] !== 'EmailVerif') {
-            // Sudah diverifikasi atau status bukan EmailVerif
-            return redirect()->to('/login')->with('error', 'Akun sudah diverifikasi atau tidak perlu verifikasi.');
+            return view('account/verifikasi');
         }
 
-        // Update status_akun jadi Aktif
         $this->accountModel->update($account['id_account'], ['status_akun' => 'Aktif']);
 
-        return redirect()->to('/login')->with('message', 'Verifikasi berhasil! Silakan login.');
+        return view('account/verifikasi');
     }
 
     // Login
@@ -325,9 +294,7 @@ class Account extends BaseController
 
         // Jika tidak ada perubahan, beri pesan
         if (empty($updateData)) {
-            return redirect()->back()->withInput()->with('errors', [
-                'form' => ['Tidak ada perubahan yang disimpan.']
-            ]);
+            return redirect()->back()->withInput()->with('error', 'Tidak ada perubahan yang disimpan.');
         }
 
         // Simpan perubahan
@@ -346,10 +313,248 @@ class Account extends BaseController
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     }
-
-    // Lamat Pengguna
-    public function indexAlamat()
+    
+    // Profil Admin
+    public function indexProfilAdmin()
     {
-        return view('account/alamat');
+        return view('admin/chibomi/profil');
     }
+
+    // Daftar List Akun
+    public function indexListAkun()
+    {
+        $users = $this->accountModel->findAll();
+
+        return view('admin/chibomi/list-akun', [
+            'users' => $users,
+        ]);
+    }
+
+    // Register Admin
+    public function indexRegistrasiAdmin()
+    {
+        return view('admin/chibomi/add-akun', [
+            'errors' => session()->getFlashdata('errors')
+        ]);
+    }
+
+    public function saveRegistrasiAdmin()
+    {
+        $postData = $this->request->getPost();
+
+        $validationRules = [
+            'email' => 'required|valid_email|is_unique[accounts.email]',
+            'nama' => 'required|string|max_length[255]',
+            'telepon' => 'required|regex_match[/^[0-9]{10,20}$/]',
+        ];
+
+        $validationMessages = [
+            'email' => [
+                'required' => 'Email wajib diisi.',
+                'valid_email' => 'Format email tidak valid.',
+                'is_unique' => 'Email sudah terdaftar.',
+            ],
+            'nama' => [
+                'required' => 'Nama wajib diisi.',
+                'string' => 'Nama hanya boleh berisi karakter.',
+                'max_length' => 'Nama maksimal 255 karakter.',
+            ],
+            'telepon' => [
+                'required' => 'Nomor telepon wajib diisi.',
+                'regex_match' => 'Format nomor telepon tidak valid.',
+            ],
+        ];
+
+        // Jalankan validasi
+        if (!$this->validate($validationRules, $validationMessages)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors())
+                ->with('error', 'Registrasi gagal. Silakan coba lagi dengan ketentuan yang berlaku.');
+        }
+
+        $data = [
+            'email' => htmlspecialchars($postData['email']),
+            'nama' => htmlspecialchars($postData['nama']),
+            'telepon' => htmlspecialchars($postData['telepon']),
+            'status_akun' => 'EmailVerif',
+            'role' => 'Admin',
+        ];
+        $data['id_account'] = Uuid::uuid4()->toString();
+
+        $password = bin2hex(random_bytes(8)); 
+        $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+
+        $email = \Config\Services::email();
+        $email->setTo($data['email']);
+        $email->setSubject('Akun Admin Anda');
+        $email->setMailType('html');
+
+        // Membuat link verifikasi
+        $verificationLink = base_url("verifikasi/" . md5($data['email']));
+        $message = "
+            <p>Halo <b>{$data['nama']}</b>,</p>
+            <p>Terima kasih telah mendaftar sebagai Admin. Berikut adalah detail akun Anda:</p>
+            <p>Email: {$data['email']}</p>
+            <p>Password: {$password}</p>
+            <p>Silakan klik tautan di bawah untuk memverifikasi akun Anda:</p>
+            <p><a href='{$verificationLink}' style='padding:10px 20px; background-color:#FFB200; color:white; text-decoration:none;'>Verifikasi Akun</a></p>
+            <p>Atau salin link ini ke browser:</p>
+            <p>{$verificationLink}</p>
+            <p><i>Terima kasih</i></p>
+        ";
+        $email->setMessage($message);
+
+        // Simpan data akun
+        if (!$this->accountModel->insert($data)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data.');
+        }
+
+        // Kirim email verifikasi
+        if (!$email->send()) {
+            return redirect()->back()->withInput()->with('error', 'Gagal mengirim email verifikasi. Silakan coba lagi.');
+        }
+
+        return redirect()->to('/admin/akun/list')->with('message', 'Registrasi Admin berhasil.');
+    }
+
+    public function changeStatus()
+    {
+        $postData = $this->request->getJSON();
+        $idAccount = $postData->id_account;
+        $action = $postData->action;
+
+        // Only allow Pemilik to perform these actions
+        if (session()->get('role') !== 'Pemilik') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Anda Tidak Diizinkan']);
+        }
+
+        $user = $this->accountModel->find($idAccount);
+        if (!$user) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Data Tidak Tersedia!']);
+        }
+
+        // Change status
+        if ($action === 'blokir') {
+            $user['status_akun'] = 'Blokir';
+        } elseif ($action === 'aktifkan') {
+            $user['status_akun'] = 'Aktif';
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Aksi Gagal!']);
+        }
+
+        // Update the user status
+        if ($this->accountModel->save($user)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Status Berhasil Diubah!']);
+        }
+
+        return $this->response->setJSON(['success' => false, 'message' => 'Status Gagal Diubah!']);
+    }
+
+    public function sendVerification()
+    {
+        $postData = $this->request->getJSON();
+        $idAccount = $postData->id_account;
+
+        $user = $this->accountModel->find($idAccount);
+        if (!$user) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Data Tidak Tersedia!']);
+        }
+
+        // Kirim email verifikasi
+        $email = \Config\Services::email();
+        $email->setTo($user['email']);
+        $email->setSubject('Verifikasi Akun Anda');
+        $email->setMailType('html');
+
+        $verificationLink = base_url("verifikasi/" . md5($user['email']));
+        $message = "
+            <p>Halo <b>{$user['nama']}</b>,</p>
+            <p>Terima kasih telah mendaftar. Klik tombol berikut untuk verifikasi akun Anda:</p>
+            <p><a href='{$verificationLink}' style='padding:10px 20px; background-color:#FFB200; color:white; text-decoration:none;'>Verifikasi Akun</a></p>
+            <p>Atau salin link ini ke browser:</p>
+            <p>{$verificationLink}</p>
+            <p><i>Terima kasih</i></p>
+        ";
+        $email->setMessage($message);
+
+        // Mengirim email
+        if ($email->send()) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Email Verifikasi Berhasil Terkirim!']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Gagal mengirim email verifikasi.']);
+        }
+    }
+
+    public function indexLupaPassword()
+    {
+        return view('account/lupa-password', [
+            'errors' => session()->getFlashdata('errors')
+        ]);
+    }
+
+    public function saveLupaPassword()
+    {
+        $postData = $this->request->getPost();
+
+        $validationRules = [
+            'email' => 'required|valid_email'
+        ];
+
+        $validationMessages = [
+            'email' => [
+                'required' => 'Email wajib diisi.',
+                'valid_email' => 'Format email tidak valid.'
+            ]
+        ];
+
+        // Jalankan validasi
+        if (!$this->validate($validationRules, $validationMessages)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors())
+                ->with('error', 'Reset Password gagal. Silakan coba lagi dengan ketentuan yang berlaku.');
+        }
+
+        $email = $postData['email'];
+        $account = $this->accountModel->where('email', $email)->first();
+
+        if (!$account) {
+            return redirect()->back()->with('error', 'Akun dengan email tersebut tidak ditemukan.');
+        }
+
+        // Generate password baru
+        $newPassword = bin2hex(random_bytes(8));
+        $account['password'] = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        // Simpan password baru ke dalam database
+        if (!$this->accountModel->save($account)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data password baru.');
+        }
+
+        // Kirim email dengan password baru
+        $emailService = \Config\Services::email();
+        $emailService->setTo($account['email']);
+        $emailService->setSubject('Reset Password Akun');
+        $emailService->setMailType('html');
+
+        $message = "
+            <p>Halo <b>{$account['nama']}</b>,</p>
+            <p>Berikut adalah password baru untuk akun Anda:</p>
+            <p>Email: {$account['email']}</p>
+            <p>Password: {$newPassword}</p>
+            <p>Silakan login dengan password baru tersebut dan segera lakukan ubah password pada halaman profil.</p>
+            <p><i>Terima kasih</i></p>
+        ";
+        $emailService->setMessage($message);
+
+        // Kirim email
+        if (!$emailService->send()) {
+            return redirect()->back()->withInput()->with('error', 'Gagal mengirim email dengan password baru.');
+        }
+
+        // Berhasil
+        return redirect()->to('/login')->with('message', 'Password baru telah dikirim ke email Anda.');
+    }
+
 }
