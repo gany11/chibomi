@@ -53,7 +53,7 @@
                                                        <div class="mb-3">
                                                             <label for="kode" class="form-label">Kode</label>
                                                             <input type="text" id="kode" class="form-control" name="kode" placeholder="Kode Layanan"
-                                                                 value="<?= old('kode', $delivery['kode'] ?? '') ?>" required>
+                                                                 value="<?= old('kode', $delivery['kode'] ?? '')?>" <?= (empty($delivery['kode']) ? '' : 'readonly') ?> required>
                                                             <?php if (isset($errors['kode'])): ?>
                                                                  <small class="text-danger"><?= esc($errors['kode']) ?></small>
                                                             <?php endif; ?>

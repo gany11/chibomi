@@ -41,14 +41,14 @@
 
                                    // Jika Pemilik, saat status Draf, tampilkan Pulihkan dan Hapus
                                    if ($sessionRole === 'Pemilik') {
-                                        $buttons .= '<button class="btn btn-sm btn-soft-success m-1" onclick="restorePortofolio(\''.$item['id_product'].'\')">Pulihkan</button>';
-                                        $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="deletePortofolio(\''.$item['id_product'].'\')">Hapus</button>';
+                                        $buttons .= '<button class="btn btn-sm btn-soft-success m-1" onclick="restoreJasa(\''.$item['id_product'].'\')">Pulihkan</button>';
+                                        $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="deleteJasa(\''.$item['id_product'].'\')">Hapus</button>';
                                    }
                               } else {
                                    $item['status_label'] = '<span class="badge bg-success-subtle text-success py-1 px-2">Aktif</span>';
 
                                    // Jika status Aktif, tampilkan tombol Arsipkan
-                                   $buttons .= '<button class="btn btn-sm btn-soft-warning m-1" onclick="archivePortofolio(\''.$item['id_product'].'\')">Arsipkan</button>';
+                                   $buttons .= '<button class="btn btn-sm btn-soft-warning m-1" onclick="archiveJasa(\''.$item['id_product'].'\')">Arsipkan</button>';
                               }
 
                               $item['action_buttons'] = $buttons;
@@ -104,10 +104,10 @@
                                    }
                               });
 
-                              function archivePortofolio(id_product) {
+                              function archiveJasa(id_product) {
                                    Swal.fire({
-                                        title: 'Arsipkan Portofolio?',
-                                        text: 'Portofolio akan diarsipkan!',
+                                        title: 'Arsipkan Jasa?',
+                                        text: 'Jasa akan diarsipkan!',
                                         icon: 'warning',
                                         showCancelButton: true,
                                         confirmButtonText: 'Ya, Arsipkan!',
@@ -138,10 +138,10 @@
                                    });
                               }
 
-                              function restorePortofolio(id_product) {
+                              function restoreJasa(id_product) {
                                    Swal.fire({
-                                        title: 'Pulihkan Portofolio?',
-                                        text: 'Portofolio akan dipulihkan!',
+                                        title: 'Pulihkan Jasa?',
+                                        text: 'Jasa akan dipulihkan!',
                                         icon: 'question',
                                         showCancelButton: true,
                                         confirmButtonText: 'Ya, Pulihkan!',
@@ -172,10 +172,10 @@
                                    });
                               }
 
-                              function deletePortofolio(id_product) {
+                              function deleteJasa(id_product) {
                                    Swal.fire({
-                                        title: 'Hapus Portofolio?',
-                                        text: 'Portofolio akan dihapus secara permanen!',
+                                        title: 'Hapus Jasa?',
+                                        text: 'Jasa akan dihapus secara permanen!',
                                         icon: 'error',
                                         showCancelButton: true,
                                         confirmButtonText: 'Ya, Hapus!',

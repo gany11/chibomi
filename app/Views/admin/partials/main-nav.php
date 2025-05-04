@@ -81,15 +81,75 @@
                     </a>
                     <div class="collapse" id="sidebarOrders">
                          <ul class="nav sub-navbar-nav">
-
                               <li class="sub-nav-item">
-                                   <a class="sub-nav-link" href="<?= base_url('/admin/pesanan/list')?>">List</a>
+                                   <a class="sub-nav-link  menu-arrow" href="#sidebarItemDemoSubItem" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarItemDemoSubItem">
+                                        <span> Barang </span>
+                                   </a>
+                                   <div class="collapse" id="sidebarItemDemoSubItem">
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/barang/pending">Pending</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/barang/proses">Proses</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/barang/kirim">Kirim</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/barang/selesai">Selesai</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/barang/batal">Batal</a>
+                                             </li>
+                                        </ul>
+                                   </div>
                               </li>
                               <li class="sub-nav-item">
-                                   <a class="sub-nav-link" href="<?= base_url('/admin/pesanan/laporan')?>">Laporan</a>
+                                   <a class="sub-nav-link  menu-arrow" href="#sidebarItemDemoSubItem2" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarItemDemoSubItem2">
+                                        <span> Jasa </span>
+                                   </a>
+                                   <div class="collapse" id="sidebarItemDemoSubItem2">
+                                   <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/jasa/pending">Pending</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/jasa/proses">Proses</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/jasa/selesai">Selesai</a>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav sub-navbar-nav">
+                                             <li class="sub-nav-item">
+                                                  <a class="sub-nav-link" href="/admin/pesanan/list/jasa/batal">Batal</a>
+                                             </li>
+                                        </ul>
+                                   </div>
                               </li>
                          </ul>
                     </div>
+               </li>
+               <li class="nav-item">
+                    <a class="nav-link" href="<?= base_url('/admin/laporan')?>">
+                         <span class="nav-icon">
+                              <iconify-icon icon="solar:bill-list-bold-duotone"></iconify-icon>
+                         </span>
+                         <span class="nav-text"> Laporan</span>
+                    </a>
                </li>
 
                <li class="nav-item">

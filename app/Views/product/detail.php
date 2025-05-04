@@ -175,7 +175,7 @@ echo view('master\header', [
                                                     <li>
                                                         <div class="ltn__comment-item clearfix">
                                                             <div class="ltn__commenter-img">
-                                                                <img src="<?= base_url('assets/img/user.png') ?>" alt="Image">
+                                                                <img src="<?= base_url('assets/img/favicon.png') ?>" alt="Image">
                                                             </div>
                                                             <div class="ltn__commenter-comment">
                                                                 <h6><a href="#"><?= esc($u['nama']) ?></a></h6>
@@ -190,7 +190,16 @@ echo view('master\header', [
                                                                     </ul>
                                                                 </div>
                                                                 <p><?= esc($u['ulasan']) ?></p>
-                                                                <span class="ltn__comment-reply-btn"><?= date('d M Y', strtotime($u['created_at'])) ?></span>
+                                                                <?php if (in_array(session()->get('role'), ['Pemilik', 'Admin'])): ?>
+                                                                    <div class="mb-2">
+                                                                        <button class="btn btn-sm btn-danger"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#sembunyiModal"
+                                                                            data-id="<?= $u['id_product_order'] ?>">
+                                                                            Sembunyikan Ulasan
+                                                                        </button>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -210,5 +219,36 @@ echo view('master\header', [
 </div>
 <!-- SHOP DETAILS AREA END -->
 
- 
+ <!-- Modal Sembunyikan Ulasan -->
+<div class="modal fade" id="sembunyiModal" tabindex="-1">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content text-center p-4">
+            <div class="modal-header border-0 justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <h4 class="mb-3">Apakah Anda yakin ingin menyembunyikan ulasan ini?</h4>
+                <div class="btn-wrapper d-flex justify-content-center gap-3">
+                    <a href="#" id="confirmSembunyi" class="btn btn-warning">Ya, Sembunyikan</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var sembunyiModal = document.getElementById('sembunyiModal');
+        var confirmSembunyiBtn = document.getElementById('confirmSembunyi');
+
+        sembunyiModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var commentId = button.getAttribute('data-id');
+
+            confirmSembunyiBtn.setAttribute('href', '<?= base_url('ulasan/sembunyikan/') ?>' + commentId);
+        });
+    });
+</script>
+
 <?php echo view('master\footer'); ?>

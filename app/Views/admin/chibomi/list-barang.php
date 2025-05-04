@@ -31,9 +31,9 @@
                          <div class="col-xl-12">
                               <?php
                               $sessionRole = session()->get('role');
-                              foreach ($jasa as &$item) {
+                              foreach ($barang as &$item) {
                               // Siapkan tombol detail
-                              $buttons = '<button class="btn btn-sm btn-soft-primary m-1" onclick="window.location.href=\'/admin/jasa/detail/'.$item['id_product'].'\'">Detail</button>';
+                              $buttons = '<button class="btn btn-sm btn-soft-primary m-1" onclick="window.location.href=\'/admin/barang/detail/'.$item['id_product'].'\'">Detail</button>';
 
                               // Status Berdasarkan drafted_at
                               if ($item['drafted_at']) {
@@ -41,14 +41,14 @@
 
                                    // Jika Pemilik, saat status Draf, tampilkan Pulihkan dan Hapus
                                    if ($sessionRole === 'Pemilik') {
-                                        $buttons .= '<button class="btn btn-sm btn-soft-success m-1" onclick="restorePortofolio(\''.$item['id_product'].'\')">Pulihkan</button>';
-                                        $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="deletePortofolio(\''.$item['id_product'].'\')">Hapus</button>';
+                                        $buttons .= '<button class="btn btn-sm btn-soft-success m-1" onclick="restoreBarang(\''.$item['id_product'].'\')">Pulihkan</button>';
+                                        $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="deleteBarang(\''.$item['id_product'].'\')">Hapus</button>';
                                    }
                               } else {
                                    $item['status_label'] = '<span class="badge bg-success-subtle text-success py-1 px-2">Aktif</span>';
 
                                    // Jika status Aktif, tampilkan tombol Arsipkan
-                                   $buttons .= '<button class="btn btn-sm btn-soft-warning m-1" onclick="archivePortofolio(\''.$item['id_product'].'\')">Arsipkan</button>';
+                                   $buttons .= '<button class="btn btn-sm btn-soft-warning m-1" onclick="archiveBarang(\''.$item['id_product'].'\')">Arsipkan</button>';
                               }
 
                               $item['action_buttons'] = $buttons;
@@ -69,7 +69,7 @@
 
                               <script>
                               document.addEventListener("DOMContentLoaded", function () {
-                                   const jasa = <?= json_encode($jasa, JSON_UNESCAPED_UNICODE) ?>;
+                                   const barang = <?= json_encode($barang, JSON_UNESCAPED_UNICODE) ?>;
 
                                    if (document.getElementById("table-gridjs")) {
                                         new gridjs.Grid({
@@ -95,7 +95,7 @@
                                              },
                                              sort: true,
                                              search: true,
-                                             data: jasa.map(p => [
+                                             data: barang.map(p => [
                                                   p.nama_produk,
                                                   p.status_label,
                                                   p.action_buttons
@@ -104,10 +104,10 @@
                                    }
                               });
 
-                              function archivePortofolio(id_product) {
+                              function archiveBarang(id_product) {
                                    Swal.fire({
-                                        title: 'Arsipkan Portofolio?',
-                                        text: 'Portofolio akan diarsipkan!',
+                                        title: 'Arsipkan Barang?',
+                                        text: 'Barang akan diarsipkan!',
                                         icon: 'warning',
                                         showCancelButton: true,
                                         confirmButtonText: 'Ya, Arsipkan!',
@@ -138,10 +138,10 @@
                                    });
                               }
 
-                              function restorePortofolio(id_product) {
+                              function restoreBarang(id_product) {
                                    Swal.fire({
-                                        title: 'Pulihkan Portofolio?',
-                                        text: 'Portofolio akan dipulihkan!',
+                                        title: 'Pulihkan Barang?',
+                                        text: 'Barang akan dipulihkan!',
                                         icon: 'question',
                                         showCancelButton: true,
                                         confirmButtonText: 'Ya, Pulihkan!',
@@ -172,10 +172,10 @@
                                    });
                               }
 
-                              function deletePortofolio(id_product) {
+                              function deleteBarang(id_product) {
                                    Swal.fire({
-                                        title: 'Hapus Portofolio?',
-                                        text: 'Portofolio akan dihapus secara permanen!',
+                                        title: 'Hapus Barang?',
+                                        text: 'Barang akan dihapus secara permanen!',
                                         icon: 'error',
                                         showCancelButton: true,
                                         confirmButtonText: 'Ya, Hapus!',

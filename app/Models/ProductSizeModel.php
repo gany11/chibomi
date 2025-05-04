@@ -19,12 +19,4 @@ class ProductSizeModel extends Model
         'tinggi_cm',
         'berat_gram',
     ];
-
-    protected $beforeInsert = ['generateUUID'];
-
-    protected function generateUUID(array $data)
-    {
-        $data['data']['id_product_size'] = Uuid::uuid4()->toString();
-        return $data;
-    }
 }

@@ -26,9 +26,7 @@ class ProductOrderModel extends Model
 
     protected function generateUUID(array $data)
     {
-        if (empty($data['data']['id_product_order'])) {
-            $data['data']['id_product_order'] = Uuid::uuid4()->toString();
-        }
+        $data['data']['id_product_order'] = Uuid::uuid4()->toString();
         return $data;
     }
 
@@ -37,7 +35,7 @@ class ProductOrderModel extends Model
         $db = \Config\Database::connect();
 
         return $db->table('product_order')
-            ->select('accounts.nama, product_order.rating, product_order.ulasan')
+            ->select('accounts.nama, product_order.rating, product_order.id_product_order, product_order.ulasan')
             ->join('transaksi', 'transaksi.id_transaksi = product_order.id_transaksi')
             ->join('accounts', 'accounts.id_account = transaksi.id_account')
             ->where('product_order.id_product', $id)

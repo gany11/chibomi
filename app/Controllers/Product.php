@@ -92,6 +92,21 @@ class Product extends BaseController
         return view('product/detail', $data);
     }
 
+    public function hideUlasan($id)
+    {
+        $produk = $this->productOrderModel->find($id);
+
+        if (!$produk) {
+            return redirect()->back()->with('eror', 'Ulasan tidak ditemukan.');
+        }
+
+        $this->productOrderModel->update($id, [
+            'hide_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
+    }
+
     // Admin
     public function indexFormTambahProduct()
     {
@@ -108,17 +123,12 @@ class Product extends BaseController
 
         $validationRules = [
             'jenis'          => 'required|in_list[Barang,Jasa]',
-            'kategori'       => 'permit_empty|string|max_length[255]',
+            'kategori'       => 'required|string|max_length[255]',
             'nama_produk'    => 'required|string|max_length[255]|is_unique[products.nama_produk]',
             'deskripsi'      => 'required|string',
             'tag'            => 'required|string|max_length[255]',
             'harga_beli'     => 'required|decimal',
             'harga_jual'     => 'required|decimal',
-            'stok_awal'      => 'permit_empty|integer',
-            'panjang'        => 'permit_empty|decimal',
-            'lebar'          => 'permit_empty|decimal',
-            'tinggi'         => 'permit_empty|decimal',
-            'berat'          => 'permit_empty|decimal',
             'cover'          => ($coverRequired ? 'uploaded[cover]|' : '') . 'max_size[cover,2048]|is_image[cover]|mime_in[cover,image/jpeg,image/png,image/jpg]',
         ];
 
@@ -132,12 +142,19 @@ class Product extends BaseController
                 'max_length' => 'Nama produk maksimal 255 karakter.',
                 'is_unique'  => 'Nama produk sudah digunakan.'
             ],
+            'deskripsi' => [
+                'required'    => 'Deskripsi wajib diisi.',
+                'string'      => 'Deskripsi harus berupa teks.',
+            ],
             'harga_beli' => [
                 'required' => 'Harga beli wajib diisi.',
                 'decimal'  => 'Harga beli harus berupa angka desimal.'
             ],
             'tag' => [
                 'required'  => 'Tag wajib diisi.'
+            ],
+            'kategori' => [
+                'required'  => 'Kategori wajib diisi.'
             ],
             'harga_jual' => [
                 'required' => 'Harga jual wajib diisi.',
@@ -247,14 +264,19 @@ class Product extends BaseController
             ];
 
             $dimensi = [
-                'id_product'     => $idProduk,
+                'id_product_size'     => Uuid::uuid4()->toString(),
+                'id_product'        => $idProduk,
                 'panjang_cm'       => $this->request->getPost('panjang') ?: null,
                 'lebar_cm'         => $this->request->getPost('lebar') ?: null,
                 'tinggi_cm'        => $this->request->getPost('tinggi') ?: null,
                 'berat_gram'        => $this->request->getPost('berat') ?: null,
             ];
 
-            if (!$this->stockModel->insert($stok) && !$this->productSizeModel->insert($dimensi)) {
+            if (!$this->stockModel->insert($stok)) {
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan produk');
+            }
+
+            if (!$this->productSizeModel->insert($dimensi)) {
                 return redirect()->back()->withInput()->with('error', 'Gagal menyimpan produk');
             }
 
@@ -276,7 +298,7 @@ class Product extends BaseController
 
     public function indexListBarang()
     {
-        $data['jasa'] = $this->productModel
+        $data['barang'] = $this->productModel
         ->where('deleted_at', null)
         ->where('jenis', 'Barang')
         ->findAll();
@@ -284,7 +306,375 @@ class Product extends BaseController
         return view('admin/chibomi/list-barang', $data);
     }
 
+    //Edit
+    public function indexDetailBarangAdmin($id)
+    {
+        $produk = $this->productModel
+            ->where('id_product', $id)
+            ->where('deleted_at', null)
+            ->where('jenis', 'Barang')
+            ->first();
 
+        if (!$produk) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $images = $this->imagesProductModel
+        ->where('id_product', $produk['id_product'])
+        ->whereIn('keterangan', ['Cover', 'Pendukung'])
+        ->orderBy('FIELD(keterangan, "Cover", "Pendukung")')
+        ->findAll();
+
+        $imageFiles = empty($images) ? ['1.png'] : array_column($images, 'file');
+
+        $harga = $this->productPriceModel
+            ->where('id_product', $produk['id_product'])
+            ->where('tanggal_berakhir', null)
+            ->first();
+
+        $dimensi = $this->productSizeModel
+        ->where('id_product', $produk['id_product'])
+        ->first();
+
+        $data = [
+            'barang' => $produk,
+            'images' => $imageFiles,
+            'harga' => $harga,
+            'dimensi' => $dimensi,
+            'message' => session()->getFlashdata('message'),
+            'errors' => session()->getFlashdata('errors'),
+            'error' => session()->getFlashdata('error')
+        ];
+
+        return view('admin/chibomi/detail-barang', $data);
+    }
+
+    public function saveDetailBarangAdmin($id)
+    {
+        $validationRules = [
+            'kategori'       => 'required|string|max_length[255]',
+            'deskripsi'      => 'required|string',
+            'tag'            => 'required|string|max_length[255]',
+            'harga_beli'     => 'required|decimal',
+            'harga_jual'     => 'required|decimal',
+            'stok_awal'      => 'permit_empty|integer',
+            'panjang'        => 'required|decimal',
+            'lebar'          => 'required|decimal',
+            'tinggi'         => 'required|decimal',
+            'berat'          => 'required|decimal',
+        ];
+
+        $validationMessages = [
+            'harga_beli' => [
+                'required' => 'Harga beli wajib diisi.',
+                'decimal'  => 'Harga beli harus berupa angka desimal.'
+            ],
+            
+            'kategori' => [
+                'required'    => 'Kategori wajib diisi.',
+            ],
+            'deskripsi' => [
+                'required'    => 'Deskripsi wajib diisi.',
+                'string'      => 'Deskripsi harus berupa teks.',
+            ],
+            'tag' => [
+                'required'  => 'Tag wajib diisi.'
+            ],
+            'harga_jual' => [
+                'decimal'  => 'Harga jual harus berupa angka desimal.'
+            ],
+            'panjang' => [
+                'required' => 'Panjang wajib diisi.',
+                'decimal'  => 'Panjang harus berupa angka desimal.'
+            ],
+            'stok_awal' => [
+                'required' => 'Stok wajib diisi.',
+                'integer'  => 'Stok harus berupa angka integer.'
+            ],
+            'lebar' => [
+                'required' => 'Lebar wajib diisi.',
+                'decimal'  => 'Lebar harus berupa angka desimal.'
+            ],
+            'tinggi' => [
+                'required' => 'Tinggi wajib diisi.',
+                'decimal'  => 'Tinggi harus berupa angka desimal.'
+            ],
+            'berat' => [
+                'required' => 'Berat wajib diisi.',
+                'decimal'  => 'Berat  harus berupa angka desimal.'
+            ],
+        ]; 
+
+        if (!$this->validate($validationRules)) {
+            return redirect()->back()->withInput()->with('error', 'Ada kesalahan pada form.')->with('errors', $this->validator->getErrors());
+        }
+    
+        $data = [
+            'kategori'        => $this->request->getPost('kategori') ?: null,
+            'deskripsi'       => $this->request->getPost('deskripsi'),
+            'tag'             => $this->request->getPost('tag') ?: null,
+        ];
+
+        $harga = [
+            'id_product_price'      => Uuid::uuid4()->toString(),
+            'modal'                 => $this->request->getPost('harga_beli'),
+            'price_unit'            => $this->request->getPost('harga_jual'),
+            'id_product'            => $id,
+            'tanggal_awal'          => date('Y-m-d H:i:s'),
+        ];
+
+        $dimensi = [
+            'panjang_cm'       => $this->request->getPost('panjang') ?: null,
+            'lebar_cm'         => $this->request->getPost('lebar') ?: null,
+            'tinggi_cm'        => $this->request->getPost('tinggi') ?: null,
+            'berat_gram'        => $this->request->getPost('berat') ?: null,
+        ];
+    
+        $produk = $this->productModel
+            ->where('id_product', $id)
+            ->where('deleted_at', null)
+            ->where('jenis', 'Barang')
+            ->first();
+    
+        if (!$produk) {
+            return redirect()->to('/admin/barang/list')->with('error', 'Data barang tidak ditemukan');
+        }
+
+        if (!$this->productModel->update($id, $data)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data');
+        }
+
+        $dataDimensi = $this->productSizeModel
+                ->where('id_product', $produk['id_product'])
+                ->first();
+
+        if (!$this->productSizeModel->update($dataDimensi['id_product_size'], $dimensi)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data');
+        }
+
+        $dataHarga = $this->productPriceModel
+            ->where('id_product', $produk['id_product'])
+            ->where('tanggal_berakhir', null)
+            ->first();
+
+        $harga2 = [
+            'tanggal_berakhir'      => date('Y-m-d H:i:s'),
+        ];
+
+        if ($this->productPriceModel->update($dataHarga['id_product_price'], $harga2)) {
+            if (!$this->productPriceModel->insert($harga)) {
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan produk');
+            }
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data');
+        }
+
+        $stokTambah = $this->request->getPost('stok_awal');
+        if (!empty($stokTambah)){
+            $stok = [
+                'id_product'     => $produk['id_product'],
+                'id_stock'      => Uuid::uuid4()->toString(),
+                'perubahan_stock'     =>  $stokTambah ?: null,
+                'keterangan'       => 'Penambahan Awal',
+                'tanggal'    => date('Y-m-d H:i:s'),
+            ];
+            if (!$this->stockModel->insert($stok)) {
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan produk');
+            }
+        }
+
+    
+        $gambarFiles = $this->request->getFileMultiple('gambar');
+
+        if ($gambarFiles && is_array($gambarFiles)) {
+            foreach ($gambarFiles as $file) {
+                // Lewati file kosong (tanpa upload)
+                if ($file->getError() === 4) {
+                    continue;
+                }
+
+                if ($file->isValid() && !$file->hasMoved()) {
+                    if ($file->getSize() > 2097152 || !in_array($file->getMimeType(), ['image/jpeg', 'image/png', 'image/jpg'])) {
+                        return redirect()->back()->with('error', 'File gambar tidak valid atau melebihi 2MB.');
+                    }
+
+                    $newFileName = $id . '_' . time() . '.' . $file->getExtension();
+                    $file->move(FCPATH . 'assets/img/product/', $newFileName);
+
+                    $this->imagesProductModel->insert([
+                        'id_images' => Uuid::uuid4()->toString(),
+                        'id_product'        =>  $id,
+                        'file'                 => $newFileName,
+                        'alt'                  => $produk['nama_produk'],
+                        'keterangan'           => 'Pendukung',
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->to('/admin/barang/detail/' . $produk['id_product'])->with('message', 'Data berhasil diperbarui.');
+    }
+
+    public function indexDetailJasaAdmin($id)
+    {
+        $produk = $this->productModel
+            ->where('id_product', $id)
+            ->where('deleted_at', null)
+            ->where('jenis', 'Jasa')
+            ->first();
+
+        if (!$produk) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $images = $this->imagesProductModel
+        ->where('id_product', $produk['id_product'])
+        ->whereIn('keterangan', ['Cover', 'Pendukung'])
+        ->orderBy('FIELD(keterangan, "Cover", "Pendukung")')
+        ->findAll();
+
+        $imageFiles = empty($images) ? ['1.png'] : array_column($images, 'file');
+
+        $harga = $this->productPriceModel
+            ->where('id_product', $produk['id_product'])
+            ->where('tanggal_berakhir', null)
+            ->first();
+
+        $data = [
+            'jasa' => $produk,
+            'images' => $imageFiles,
+            'harga' => $harga,
+            'message' => session()->getFlashdata('message'),
+            'errors' => session()->getFlashdata('errors'),
+            'error' => session()->getFlashdata('error')
+        ];
+
+        return view('admin/chibomi/detail-jasa', $data);
+    }
+
+    public function saveDetailJasaAdmin($id)
+    {
+        $validationRules = [
+            'kategori'       => 'required|string|max_length[255]',
+            'deskripsi'      => 'required|string',
+            'tag'            => 'required|string|max_length[255]',
+            'harga_beli'     => 'required|decimal',
+            'harga_jual'     => 'required|decimal',
+        ];
+
+        $validationMessages = [
+            'harga_beli' => [
+                'required' => 'Harga beli wajib diisi.',
+                'decimal'  => 'Harga beli harus berupa angka desimal.'
+            ],            
+            'kategori' => [
+                'required'    => 'Kategori wajib diisi.',
+            ],
+            'deskripsi' => [
+                'required'    => 'Deskripsi wajib diisi.',
+                'string'      => 'Deskripsi harus berupa teks.',
+            ],
+            'tag' => [
+                'required'  => 'Tag wajib diisi.'
+            ],
+            'harga_jual' => [
+                'required' => 'Harga jual wajib diisi.',
+                'decimal'  => 'Harga jual harus berupa angka desimal.'
+            ],
+        ]; 
+
+        if (!$this->validate($validationRules)) {
+            return redirect()->back()->withInput()->with('error', 'Ada kesalahan pada form.')->with('errors', $this->validator->getErrors());
+        }
+    
+        $data = [
+            'kategori'        => $this->request->getPost('kategori') ?: null,
+            'deskripsi'       => $this->request->getPost('deskripsi'),
+            'tag'             => $this->request->getPost('tag') ?: null,
+        ];
+
+        $harga = [
+            'id_product_price'      => Uuid::uuid4()->toString(),
+            'modal'                 => $this->request->getPost('harga_beli'),
+            'price_unit'            => $this->request->getPost('harga_jual'),
+            'id_product'            => $id,
+            'tanggal_awal'          => date('Y-m-d H:i:s'),
+        ];
+    
+        $produk = $this->productModel
+            ->where('id_product', $id)
+            ->where('deleted_at', null)
+            ->where('jenis', 'Jasa')
+            ->first();
+    
+        if (!$produk) {
+            return redirect()->to('/admin/jasa/list')->with('error', 'Data jasa tidak ditemukan');
+        }
+
+        if (!$this->productModel->update($id, $data)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data');
+        }
+        $dataHarga = $this->productPriceModel
+            ->where('id_product', $produk['id_product'])
+            ->where('tanggal_berakhir', null)
+            ->first();
+
+        $harga2 = [
+            'tanggal_berakhir'      => date('Y-m-d H:i:s'),
+        ];
+
+        if ($this->productPriceModel->update($dataHarga['id_product_price'], $harga2)) {
+            if (!$this->productPriceModel->insert($harga)) {
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan produk');
+            }
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data');
+        }
+
+        $stokTambah = $this->request->getPost('stok_awal');
+        if (!empty($stokTambah)){
+            $stok = [
+                'id_product'     => $produk['id_product'],
+                'id_stock'      => Uuid::uuid4()->toString(),
+                'perubahan_stock'     =>  $stokTambah ?: null,
+                'keterangan'       => 'Penambahan Awal',
+                'tanggal'    => date('Y-m-d H:i:s'),
+            ];
+            if (!$this->stockModel->insert($stok)) {
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan produk');
+            }
+        }
+    
+        $gambarFiles = $this->request->getFileMultiple('gambar');
+
+        if ($gambarFiles && is_array($gambarFiles)) {
+            foreach ($gambarFiles as $file) {
+                // Lewati file kosong (tanpa upload)
+                if ($file->getError() === 4) {
+                    continue;
+                }
+
+                if ($file->isValid() && !$file->hasMoved()) {
+                    if ($file->getSize() > 2097152 || !in_array($file->getMimeType(), ['image/jpeg', 'image/png', 'image/jpg'])) {
+                        return redirect()->back()->with('error', 'File gambar tidak valid atau melebihi 2MB.');
+                    }
+
+                    $newFileName = $id . '_' . time() . '.' . $file->getExtension();
+                    $file->move(FCPATH . 'assets/img/product/', $newFileName);
+
+                    $this->imagesProductModel->insert([
+                        'id_images' => Uuid::uuid4()->toString(),
+                        'id_product'        =>  $id,
+                        'file'                 => $newFileName,
+                        'alt'                  => $produk['nama_produk'],
+                        'keterangan'           => 'Pendukung',
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->to('/admin/jasa/detail/' . $produk['id_product'])->with('message', 'Data berhasil diperbarui.');
+    }
 
     public function archive()
     {

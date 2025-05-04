@@ -35,7 +35,7 @@ echo view('master\header', [
                         <img src="<?php echo base_url('assets/img/icons/email.png')?>" alt="Icon Image">
                     </div>
                     <h3>Email</h3>
-                    <p>info@webmail.com <br> jobs@webexample.com</p>
+                    <p>websitechibomi@gmail.com</p>
                 </div>
             </div>
             <div class="col-lg-4 h-100">
@@ -44,7 +44,7 @@ echo view('master\header', [
                         <img src="<?php echo base_url('assets/img/icons/phone.png')?>" alt="Icon Image">
                     </div>
                     <h3>Telepon</h3>
-                    <p>+0123-456789 <br> +987-6543210</p>
+                    <p>+62-878-7350-4007</p>
                 </div>
             </div>
             <div class="col-lg-4 h-100">
@@ -53,7 +53,7 @@ echo view('master\header', [
                         <img src="<?php echo base_url('assets/img/icons/pin.png')?>" alt="Icon Image">
                     </div>
                     <h3>Alamat</h3>
-                    <p>18/A, New Born Town Hall <br> New York, US</p>
+                    <p>Indonesia</p>
                 </div>
             </div>
         </div>

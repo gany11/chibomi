@@ -54,55 +54,85 @@ class DeliveryService extends BaseController
 
     public function saveAddDeliveryService()
     {
-        $validation = \Config\Services::validation();
-
-        $rules = [
-            'nama' => [
-                'label' => 'Nama Layanan',
-                'rules' => 'required|string|max_length[255]',
-                'errors' => [
-                    'required' => '{field} harus diisi.',
-                    'string' => '{field} harus berupa teks.',
-                    'max_length' => '{field} maksimal 255 karakter.'
-                ]
-            ],
-            'kode' => [
-                'label' => 'Kode Layanan',
-                'rules' => 'required|string|max_length[50]',
-                'errors' => [
-                    'required' => '{field} harus diisi.',
-                    'string' => '{field} harus berupa teks.',
-                    'max_length' => '{field} maksimal 50 karakter.'
-                ]
-            ],
-            'status' => [
-                'label' => 'Status',
-                'rules' => 'required|in_list[Aktif,Pasif]',
-                'errors' => [
-                    'required' => '{field} harus dipilih.',
-                    'in_list' => '{field} harus berupa Aktif atau Pasif.'
-                ]
-            ],
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
-
-        $data = [
-            'nama' => $this->request->getPost('nama'),
-            'kode' => $this->request->getPost('kode'),
-            'status' => $this->request->getPost('status'),
-        ];
-
         $id = $this->request->getPost('id');
 
         if ($id) {
-            // UPDATE
+            $validation = \Config\Services::validation();
+
+            $rules = [
+                'nama' => [
+                    'label' => 'Nama Layanan',
+                    'rules' => 'required|string|max_length[255]',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'string' => '{field} harus berupa teks.',
+                        'max_length' => '{field} maksimal 255 karakter.'
+                    ]
+                ],
+                'status' => [
+                    'label' => 'Status',
+                    'rules' => 'required|in_list[Aktif,Pasif]',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'in_list' => '{field} harus berupa Aktif atau Pasif.'
+                    ]
+                ],
+            ];
+
+            if (!$this->validate($rules)) {
+                return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+            }
+
+            $data = [
+                'nama' => $this->request->getPost('nama'),
+                'status' => $this->request->getPost('status'),
+            ];
             $this->deliveryServiceModel->update($id, $data);
             return redirect()->to('/admin/pengiriman/list')->with('message', 'Layanan pengiriman berhasil diperbarui.');
         } else {
-            // INSERT
+            $validation = \Config\Services::validation();
+
+            $rules = [
+                'nama' => [
+                    'label' => 'Nama Layanan',
+                    'rules' => 'required|string|max_length[255]',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'string' => '{field} harus berupa teks.',
+                        'max_length' => '{field} maksimal 255 karakter.'
+                    ]
+                ],
+                'kode' => [
+                    'label' => 'Kode Layanan',
+                    'rules' => 'required|string|max_length[50]|in_list[jne,sicepat,ide,sap,jnt,ninja,tiki,lion,anteraja,pos,ncs,rex,rpx,sentral,star,wahana,dse]|is_unique[delivery_service.kode]',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'string'   => '{field} harus berupa teks.',
+                        'max_length' => '{field} maksimal 50 karakter.',
+                        'in_list'  => '{field} harus memiliki nilai yang valid.',
+                        'is_unique' => '{field} sudah terdaftar. Gunakan kode lain.',
+                    ]
+                ],
+                'status' => [
+                    'label' => 'Status',
+                    'rules' => 'required|in_list[Aktif,Pasif]',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'in_list' => '{field} harus berupa Aktif atau Pasif.'
+                    ]
+                ],
+            ];
+
+            if (!$this->validate($rules)) {
+                return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+            }
+
+            $data = [
+                'nama' => $this->request->getPost('nama'),
+                'kode' => $this->request->getPost('kode'),
+                'status' => $this->request->getPost('status'),
+            ];
+
             $data['id_delivery_service'] = Uuid::uuid4()->toString();
             $this->deliveryServiceModel->insert($data);
             return redirect()->to('/admin/pengiriman/list')->with('message', 'Layanan pengiriman berhasil ditambahkan.');

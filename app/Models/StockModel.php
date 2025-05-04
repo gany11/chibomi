@@ -13,7 +13,6 @@ class StockModel extends Model
     protected $returnType     = 'array';
     protected $useSoftDeletes = false;
 
-    // Fields that can be mass assigned
     protected $allowedFields = [
         'id_stock',
         'id_product',

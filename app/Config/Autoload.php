@@ -41,6 +41,7 @@ class Autoload extends AutoloadConfig
      */
     public $psr4 = [
         APP_NAMESPACE => APPPATH,
+        'GuzzleHttp'  => ROOTPATH . 'vendor/guzzlehttp/guzzle/src',
     ];
 
     /**

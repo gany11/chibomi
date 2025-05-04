@@ -130,7 +130,7 @@
 
                                                             <!-- Berat -->
                                                             <div class="mb-3">
-                                                                 <label for="berat" class="form-label">Berat Barang</label>
+                                                                 <label for="berat" class="form-label">Berat Barang (gram)</label>
                                                                  <input type="number" id="berat" name="berat" class="form-control" value="<?= old('berat') ?>">
                                                                  <?php if (isset($errors['berat'])): ?>
                                                                       <small class="text-danger"><?= esc($errors['berat']) ?></small>
@@ -165,7 +165,7 @@
 
                                                        <!-- Button Submit -->
                                                        <div class="btn-wrapper">
-                                                            <button class="btn btn-primary" type="submit">Simpan Portofolio</button>
+                                                            <button class="btn btn-primary" type="submit">Simpan Data</button>
                                                             <button type="button" class="btn btn-secondary" onclick="window.history.back();">Batal</button>
                                                        </div>
                                                   </form>

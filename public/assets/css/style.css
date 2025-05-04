@@ -625,6 +625,16 @@ ol li {
     bottom: 0;
     background-color: var(--section-bg-1); }
 
+.before-bg-2 {
+  position: relative; }
+  .before-bg-2:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    background-color: var(--section-bg-1); }
+
 .before-bg-bottom {
   position: relative; }
   .before-bg-bottom:before {
@@ -9929,10 +9939,8 @@ input.cart-plus-minus-box {
   .shoping-cart-table thead th {
     display: none; }
   .shoping-cart-table .table tr {
-    display: block;
     text-align: center; }
   .shoping-cart-table td {
-    display: block;
     padding: 20px 15px; }
   .cart-product-image {
     max-width: 100%; }

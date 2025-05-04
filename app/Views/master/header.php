@@ -62,8 +62,8 @@
                                     </div>
                                 </div>
                                 <div class="header-search-1-form">
-                                    <form id="#" method="get"  action="#">
-                                        <input type="text" name="search" value="" placeholder="Search here..."/>
+                                    <form method="post"  action="<?php echo base_url('cari')?>">
+                                        <input type="text" name="q" value="" placeholder="Cari produk atau portofolio..."/>
                                         <button type="submit">
                                             <span><i class="icon-search"></i></span>
                                         </button>
@@ -131,8 +131,8 @@
                     <button class="ltn__utilize-close">×</button>
                 </div>
                 <div class="ltn__utilize-menu-search-form">
-                    <form action="#">
-                        <input type="text" placeholder="Search...">
+                    <form method="post"  action="<?php echo base_url('cari')?>">
+                        <input type="text" name="q" value="" placeholder="Cari produk atau portofolio..."/>
                         <button><i class="fas fa-search"></i></button>
                     </form>
                 </div>

@@ -75,6 +75,9 @@ class Address extends BaseController
             if (!$alamat) {
                 throw new \CodeIgniter\Exceptions\PageNotFoundException('Alamat tidak ditemukan');
             }
+            if ($alamat['id_account'] !== $session->get('id_account')) {
+                return redirect()->to('/alamat')->with('error', 'Anda tidak memiliki izin untuk menghapus alamat ini.');
+            }
             if (!$this->addressModel->update($id, $data)) {
                 return redirect()->back()->withInput()->with('errors', $this->addressModel->errors());
             }

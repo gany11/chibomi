@@ -206,7 +206,7 @@
                         <div class="p-3 bg-light mb-3 rounded">
                             <div class="row justify-content-end g-2">
                                 <div class="col-lg-2">
-                                    <button type="submit" class="btn btn-primary w-100">Save</button>
+                                    <button type="submit" class="btn btn-primary w-100">Simpan</button>
                                 </div>
                             </div>
                         </div>
