@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => '404 - Tidak Ditemukan'
 ]);?>
 
@@ -48,4 +48,4 @@ echo view('master\header', [
 </div>
 <!-- 404 area end -->
         
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

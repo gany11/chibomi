@@ -52,32 +52,46 @@ class PortofolioModel extends Model
                     ->findAll();
     }
 
-    public function getRecommendedPortofolio($idAccount = null, $ip = null)
+    public function getRecommendedPortofolio($idAccount = null)
     {
-        $builder = $this->db->table('view_portfolio vp')
-            ->select('vp.id_portofolio')
-            ->orderBy('vp.tanggal', 'DESC')
-            ->limit(4);
-
         if ($idAccount) {
-            $builder->where('vp.id_account', $idAccount);
-        } elseif ($ip) {
-            $builder->where('vp.ip_address', $ip);
+            // Subquery berdasarkan aktivitas user (akun atau IP)
+            $builder = $this->db->table('view_portfolio vp')
+                ->select('vp.id_portofolio')
+                ->where('vp.id_account', $idAccount)
+                ->orderBy('vp.tanggal', 'DESC')
+                ->limit(4);
+
+            $subQuery = $builder->getCompiledSelect();
+
+            return $this->select('portofolio.judul, portofolio.slug, ip.file')
+                ->join('view_portfolio vp2', 'vp2.id_portofolio = portofolio.id_portofolio')
+                ->join('images_portofolio ip', 'ip.id_portofolio = portofolio.id_portofolio AND ip.keterangan = "Cover"', 'left')
+                ->where("vp2.id_portofolio IN (
+                    SELECT id_portofolio FROM ($subQuery) AS recent_views
+                )")
+                ->where('portofolio.deleted_at', null)
+                ->where('portofolio.drafted_at', null)
+                ->groupBy('portofolio.id_portofolio')
+                ->limit(4)
+                ->findAll();
+        } else {
+            // Rekomendasi universal: portofolio dengan view terbanyak
+            return $this->select('
+                    portofolio.judul,
+                    portofolio.slug,
+                    ip.file,
+                    COUNT(vp.id_portofolio) AS total_view
+                ')
+                ->join('view_portfolio vp', 'vp.id_portofolio = portofolio.id_portofolio', 'left')
+                ->join('images_portofolio ip', 'ip.id_portofolio = portofolio.id_portofolio AND ip.keterangan = "Cover"', 'left')
+                ->where('portofolio.deleted_at', null)
+                ->where('portofolio.drafted_at', null)
+                ->groupBy('portofolio.id_portofolio')
+                ->orderBy('total_view', 'DESC')
+                ->limit(4)
+                ->findAll();
         }
-
-        $subQuery = $builder->getCompiledSelect();
-
-        return $this->select('portofolio.judul, portofolio.slug, ip.file')
-            ->join('view_portfolio vp2', 'vp2.id_portofolio = portofolio.id_portofolio')
-            ->join('images_portofolio ip', 'ip.id_portofolio = portofolio.id_portofolio AND ip.keterangan = "Cover"', 'left')
-            ->where("vp2.id_account IN (
-                SELECT DISTINCT id_account FROM ($subQuery) AS recent_views WHERE id_account IS NOT NULL
-            )")
-            ->where('portofolio.deleted_at', null)
-            ->where('portofolio.drafted_at', null)
-            ->groupBy('portofolio.id_portofolio')
-            ->limit(4)
-            ->findAll();
     }
 
 }

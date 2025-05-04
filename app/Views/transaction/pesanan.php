@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Pesanan'
 ]);?>
 
@@ -35,7 +35,7 @@ echo view('master\header', [
                     <div class="container">
                         <div class="row">
                             <?php
-                            echo view('master\menu-list-akun', [
+                            echo view('master/menu-list-akun', [
                                 'title' => 'Pesanan'
                             ]);?>
                             <div class="col-lg-8">
@@ -94,4 +94,4 @@ echo view('master\header', [
 </div>
 <!-- WISHLIST AREA START -->
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

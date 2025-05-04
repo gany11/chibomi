@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Detail Pesanan'
 ]);?>
 
@@ -36,7 +36,7 @@ echo view('master\header', [
                     <div class="container">
                         <div class="row">
                             <?php
-                            echo view('master\menu-list-akun', [
+                            echo view('master/menu-list-akun', [
                                 'title' => 'Pesanan'
                             ]);?>
                             <div class="col-lg-8">
@@ -272,4 +272,4 @@ echo view('master\header', [
 </script>
 
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

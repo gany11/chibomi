@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', ['title' => 'Konfirmasi Pesanan']);
+echo view('master/header', ['title' => 'Konfirmasi Pesanan']);
 ?>
 
 <!-- BREADCRUMB AREA -->
@@ -390,4 +390,4 @@ echo view('master\header', ['title' => 'Konfirmasi Pesanan']);
      });
 </script>
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

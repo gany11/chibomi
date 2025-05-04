@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Kontak'
 ]);?>
 
@@ -61,4 +61,4 @@ echo view('master\header', [
 </div>
 <!-- CONTACT ADDRESS AREA END -->
  
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

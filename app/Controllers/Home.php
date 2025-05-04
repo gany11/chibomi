@@ -26,13 +26,11 @@ class Home extends BaseController
     // Beranda
     public function indexBeranda()
     {
-        // Ambil dari session jika user login, atau dari IP Address
         $idAccount = session()->get('id_account');
-        $ipAddress = $this->request->getIPAddress();
 
         // Ambil data rekomendasi
-        $rekomendasiProduk = $this->productModel->getRecommendedProducts($idAccount, $ipAddress);
-        $rekomendasiPortofolio = $this->portofolioModel->getRecommendedPortofolio($idAccount, $ipAddress);
+        $rekomendasiProduk = $this->productModel->getRecommendedProducts($idAccount);
+        $rekomendasiPortofolio = $this->portofolioModel->getRecommendedPortofolio($idAccount);
 
         return view('home', [
             'produk' => $rekomendasiProduk,

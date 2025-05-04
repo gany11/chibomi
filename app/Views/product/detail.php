@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Detail Produk'
 ]);?>
 
@@ -251,4 +251,4 @@ echo view('master\header', [
     });
 </script>
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

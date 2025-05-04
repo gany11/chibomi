@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => '403 - Tidak Memiliki Akses'
 ]);?>
 
@@ -43,4 +43,4 @@ echo view('master\header', [
 </div>
 <!-- 404 area end -->
         
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

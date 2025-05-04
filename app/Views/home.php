@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Beranda'
 ]);?>
 
@@ -272,4 +272,4 @@ echo view('master\header', [
 </div>
 <!-- FAQ AREA END -->
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

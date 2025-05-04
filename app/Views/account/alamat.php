@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Alamat Saya'
 ]);?>
 
@@ -35,7 +35,7 @@ echo view('master\header', [
                     <div class="container">
                         <div class="row">
                             <?php
-                            echo view('master\menu-list-akun', [
+                            echo view('master/menu-list-akun', [
                                 'title' => 'Alamat'
                             ]);?>
                             <div class="col-lg-8">
@@ -121,7 +121,7 @@ echo view('master\header', [
 </div>
 <!-- WISHLIST AREA START -->
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const hapusLinks = document.querySelectorAll('.btn-hapus-alamat');

@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Keranjang'
 ]);
 ?>
@@ -280,4 +280,4 @@ echo view('master\header', [
 
 
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

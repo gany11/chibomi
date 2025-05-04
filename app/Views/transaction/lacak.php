@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Lacak Pengiriman'
 ]);?>
 
@@ -72,4 +72,4 @@ echo view('master\header', [
 <!-- Lacak Pengiriman END -->
 
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

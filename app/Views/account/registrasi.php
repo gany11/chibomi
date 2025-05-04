@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => 'Registrasi Akun'
 ]);?>
 
@@ -109,4 +109,4 @@ echo view('master\header', [
 </div>
 <!-- LOGIN AREA END -->
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

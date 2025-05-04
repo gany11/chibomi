@@ -1,5 +1,5 @@
 <?php
-echo view('master\header', [
+echo view('master/header', [
     'title' => (empty($alamat['id_address'])? 'Tambah Alamat' : 'Edit Alamat')
 ]);?>
 
@@ -36,7 +36,7 @@ echo view('master\header', [
                     <div class="container">
                         <div class="row">
                             <?php
-                            echo view('master\menu-list-akun', [
+                            echo view('master/menu-list-akun', [
                                 'title' => 'Alamat'
                             ]);?>
                             <div class="col-lg-8">
@@ -187,4 +187,4 @@ echo view('master\header', [
 
 
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>

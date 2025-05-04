@@ -1,4 +1,4 @@
-<?php echo view('master\header', ['title' => 'Pencarian']); ?>
+<?php echo view('master/header', ['title' => 'Pencarian']); ?>
 
 <!-- BREADCRUMB AREA START -->
 <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-image" data-bg="<?= base_url('assets/img/bg/breadcrumb.png') ?>">
@@ -103,4 +103,4 @@
 </div>
 <!-- PORTOFOLIO SECTION END -->
 
-<?php echo view('master\footer'); ?>
+<?php echo view('master/footer'); ?>
