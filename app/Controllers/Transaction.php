@@ -54,48 +54,65 @@ class Transaction extends BaseController
 
     public function callback()
     {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        try {
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
 
-        $signatureKey = $data['signature_key'] ?? '';
-        $expectedSignature = hash('sha512', 
-            $data['order_id'] . 
-            $data['status_code'] . 
-            $data['gross_amount'] . 
-            KEY_MIDTRANS_SERVER
-        );
+            log_message('debug', 'Callback STARTED');
+            log_message('debug', 'Raw: ' . $json);
+            log_message('debug', 'Decoded: ' . print_r($data, true));
 
-        if ($signatureKey !== $expectedSignature) {
-            return $this->response->setStatusCode(403)->setJSON(['error' => 'Invalid signature']);
+            if (!is_array($data)) {
+                throw new \Exception('Invalid JSON payload');
+            }
+
+            $signatureKey = $data['signature_key'] ?? '';
+            $expectedSignature = hash('sha512',
+                $data['order_id'] .
+                $data['status_code'] .
+                $data['gross_amount'] .
+                KEY_MIDTRANS_SERVER
+            );
+
+            if ($signatureKey !== $expectedSignature) {
+                throw new \Exception('Invalid signature');
+            }
+
+            //....
+            // Validasi field wajib
+            if (!isset($data['order_id'], $data['transaction_status'])) {
+                return $this->response->setStatusCode(400)->setJSON(['error' => 'Invalid payload']);
+            }
+
+            $orderId = $data['order_id'];
+            $idTransaksi = preg_replace('/-\d{3}$/', '', $orderId);
+
+            // Cegah duplikasi
+            if ($this->paymentsModel->where('midtrans_transaction_id', $data['transaction_id'])->first()) {
+                return $this->response->setJSON(['message' => 'Sudah diproses']);
+            }
+
+            $this->paymentsModel->insert([
+                'id_payments' => Uuid::uuid4()->toString(),
+                'id_transaksi' => $idTransaksi,
+                'midtrans_transaction_id' => $data['transaction_id'],
+                'payment_method' => $data['payment_type'],
+                'status_pembayaran' => $data['transaction_status'],
+                'amount' => $data['gross_amount'],
+                'fee' => 0,
+                'paid_at' => date('Y-m-d H:i:s', strtotime($data['settlement_time'] ?? $data['transaction_time']))
+            ]);
+
+            if ($data['transaction_status'] === 'settlement') {
+                $this->transaksiModel->update($idTransaksi, ['status' => 'Proses']);
+            }
+            //....
+
+            return $this->response->setJSON(['message' => 'Callback processed']);
+        } catch (\Throwable $e) {
+            log_message('critical', 'Callback error: ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON(['error' => $e->getMessage()]);
         }
-
-        if (!isset($data['order_id'], $data['transaction_status'])) {
-            return $this->response->setStatusCode(400)->setJSON(['error' => 'Invalid payload']);
-        }
-
-        $orderId = $data['order_id'];
-        $idTransaksi = preg_replace('/-\d{3}$/', '', $orderId);
-
-
-        if ($this->paymentsModel->where('midtrans_transaction_id', $data['transaction_id'])->first()) {
-            return $this->response->setJSON(['message' => 'Sudah diproses']);
-        }
-
-        $this->paymentsModel->insert([
-            'id_transaksi' => $idTransaksi,
-            'midtrans_transaction_id' => $data['transaction_id'],
-            'payment_method' => $data['payment_type'],
-            'status_pembayaran' => $data['transaction_status'],
-            'amount' => $data['gross_amount'],
-            'fee' => 0,
-            'paid_at' => date('Y-m-d H:i:s', strtotime($data['settlement_time'] ?? $data['transaction_time']))
-        ]);
-
-        if ($data['transaction_status'] === 'settlement') {
-            $this->transaksiModel->update($id, ['status' => 'Proses']);
-        }
-
-        return $this->response->setJSON(['message' => 'Callback processed']);
     }
 
     public function bayar($id_transaksi)
