@@ -87,7 +87,7 @@
                                                        }
                                                   ],
                                                   pagination: {
-                                                       limit: 5
+                                                       limit: 10
                                                   },
                                                   sort: true,
                                                   search: true,
@@ -105,7 +105,6 @@
                                         function generateActionButtons(user, sessionRole) {
                                         let buttons = '';
 
-                                        // Only show the buttons if the session role is 'Pemilik' and the user's role isn't 'Pemilik'
                                         if (sessionRole === 'Pemilik' && user.role !== 'Pemilik') {
                                              if (user.status_akun === 'Aktif') {
                                                   buttons += `<button class="btn btn-sm btn-soft-danger m-1" onclick="changeStatus('${user.id_account}', 'blokir')">Blokir</button>`;
@@ -117,8 +116,7 @@
                                                   buttons += `<button class="btn btn-sm btn-soft-warning m-1" onclick="sendVerification('${user.id_account}')">Kirim Verifikasi</button>`;
                                              }
                                         } else if (user.role === 'Pemilik') {
-                                             // If the user's role is 'Pemilik', disable all the buttons
-                                             buttons = `<button class="btn btn-sm btn-soft-secondary m-1" disabled>Anda Pemilik</button>`;
+                                             buttons = `<button class="btn btn-sm btn-soft-secondary m-1" disabled>Pemilik</button>`;
                                         }
 
                                         return buttons;

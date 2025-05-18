@@ -161,9 +161,11 @@
                     </a>
                     <div class="collapse" id="sidebarAkun">
                          <ul class="nav sub-navbar-nav">
-                              <li class="sub-nav-item">
-                                   <a class="sub-nav-link"  href="<?= base_url('/admin/akun/registrasi-admin')?>">Registrasi Admin</a>
-                              </li>
+                              <?php if (session()->has('id_account') && (session()->get('role') === 'Pemilik')): ?>
+                                   <li class="sub-nav-item">
+                                        <a class="sub-nav-link"  href="<?= base_url('/admin/akun/registrasi-admin')?>">Registrasi Admin</a>
+                                   </li>
+                              <?php endif; ?>
                               <li class="sub-nav-item">
                                    <a class="sub-nav-link"  href="<?= base_url('/admin/akun/list')?>">List</a>
                               </li>

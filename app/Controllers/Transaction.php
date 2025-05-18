@@ -88,22 +88,26 @@ class Transaction extends BaseController
             $idTransaksi = preg_replace('/-\d{3}$/', '', $orderId);
 
             // Cegah duplikasi
-            if ($this->paymentsModel->where('midtrans_transaction_id', $data['transaction_id'])->first()) {
-                return $this->response->setJSON(['message' => 'Sudah diproses']);
+            if ($this->paymentsModel->where('id_transaksi', $idTransaksi)->first()) {
+                $this->paymentsModel->where('id_transaksi', $idTransaksi)->set(['midtrans_transaction_id' => $data['transaction_id'],
+                                                                                'payment_method' => $data['payment_type'],
+                                                                                'status_pembayaran' => $data['transaction_status'],
+                                                                                'amount' => $data['gross_amount'],
+                                                                                'fee' => 0])->update();
+            } else {
+                $this->paymentsModel->insert([
+                    'id_payments' => Uuid::uuid4()->toString(),
+                    'id_transaksi' => $idTransaksi,
+                    'midtrans_transaction_id' => $data['transaction_id'],
+                    'payment_method' => $data['payment_type'],
+                    'status_pembayaran' => $data['transaction_status'],
+                    'amount' => $data['gross_amount'],
+                    'fee' => 0,
+                ]);
             }
-
-            $this->paymentsModel->insert([
-                'id_payments' => Uuid::uuid4()->toString(),
-                'id_transaksi' => $idTransaksi,
-                'midtrans_transaction_id' => $data['transaction_id'],
-                'payment_method' => $data['payment_type'],
-                'status_pembayaran' => $data['transaction_status'],
-                'amount' => $data['gross_amount'],
-                'fee' => 0,
-                'paid_at' => date('Y-m-d H:i:s', strtotime($data['settlement_time'] ?? $data['transaction_time']))
-            ]);
-
+            
             if ($data['transaction_status'] === 'settlement') {
+                $this->paymentsModel->where('id_transaksi', $idTransaksi)->set(['paid_at' => date('Y-m-d H:i:s', strtotime($data['settlement_time']))])->update();
                 $this->transaksiModel->update($idTransaksi, ['status' => 'Proses']);
             }
             //....
@@ -579,7 +583,6 @@ class Transaction extends BaseController
 
         $data['payment'] = $this->paymentsModel
             ->where('id_transaksi', $pesanan['id_transaksi'])
-            ->where('paid_at IS NOT', null, false)
             ->findAll();
 
         if ($pesanan['jenis'] === 'Jasa'){

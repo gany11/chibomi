@@ -162,8 +162,8 @@ echo view('master/header', [
                                                 <div class="card-body">
                                                     <?php if (!empty($payment)) : ?>
                                                         <?php foreach ($payment as $p) : ?>
-                                                            <p><strong>Metode:</strong> <?= esc($p['payment_method']) ?></p>
-                                                            <p><strong>Status:</strong> <?= esc($p['status_pembayaran']) ?></p>
+                                                            <p><strong>Metode:</strong> <?= ucwords(esc($p['payment_method'])) ?></p>
+                                                            <p><strong>Status:</strong> <?= ucwords(esc($p['status_pembayaran'])) ?></p>
                                                             <p><strong>Total Dibayar:</strong> Rp<?= number_format($p['amount'], 0, ',', '.') ?></p>
                                                             <p><strong>Tanggal Bayar:</strong> <?= esc($p['paid_at']) ?></p>
                                                         <?php endforeach ?>

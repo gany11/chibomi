@@ -31,10 +31,10 @@
                                 <div class="float-sm-start">
                                     <img class="logo-dark me-1" src="<?= base_url('assets/admin/images/logo-dark.png')?>" alt="logo-dark" height="24" />
                                     <div class="mt-4">
-                                        <h4><?= $toko_nama ?? 'Nama Toko' ?></h4>
+                                        <h4><?= $toko_nama ?? 'Chibomi' ?></h4>
                                         <address class="mt-3 mb-0">
-                                            <?= $toko_alamat ?? 'Alamat toko di sini' ?><br>
-                                            <abbr title="Telepon">Telepon:</abbr> <?= $toko_telepon ?? '+62-812-3456-7890' ?>
+                                            <?= $toko_alamat ?? 'Indonesia' ?><br>
+                                            <abbr title="Telepon">Telepon:</abbr> <?= $toko_telepon ?? '+62-878-7350-4007' ?>
                                         </address>
                                     </div>
                                 </div>

@@ -39,12 +39,13 @@
                                    switch ($item['status']) {
                                         case 'Pending':
                                         $item['status_label'] = '<span class="badge bg-warning-subtle text-warning py-1 px-2">Pending</span>';
-                                        $buttons .= '<button class="btn btn-sm btn-soft-success m-1" onclick="ubahStatus(\'' . $item['id_transaksi'] . '\', \'Proses\', \'Pending\')">Proses</button>';
-                                        $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="ubahStatus(\'' . $item['id_transaksi'] . '\', \'Batal\', \'Pending\')">Batal</button>';
+                                        // $buttons .= '<button class="btn btn-sm btn-soft-success m-1" onclick="ubahStatus(\'' . $item['id_transaksi'] . '\', \'Proses\', \'Pending\')">Proses</button>';
+                                        // $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="ubahStatus(\'' . $item['id_transaksi'] . '\', \'Batal\', \'Pending\')">Batal</button>';
                                         break;
                                    
                                         case 'Proses':
                                         $item['status_label'] = '<span class="badge bg-info-subtle text-info py-1 px-2">Proses</span>';
+                                        $buttons .= '<button class="btn btn-sm btn-soft-danger m-1" onclick="ubahStatus(\'' . $item['id_transaksi'] . '\', \'Batal\', \'Pending\')">Batal</button>';
                                         break;
                                    
                                         case 'Kirim':
