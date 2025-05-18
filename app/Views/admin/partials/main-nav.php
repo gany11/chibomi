@@ -1,12 +1,12 @@
 <div class="main-nav">
      <!-- Sidebar Logo -->
      <div class="logo-box">
-          <a href="/" class="logo-dark">
+          <a href="/admin" class="logo-dark">
                <img src="<?= base_url('assets/admin/images/logo-sm.png')?>" class="logo-sm" alt="logo sm">
                <img src="<?= base_url('assets/admin/images/logo-dark.png')?>" class="logo-lg" alt="logo dark">
           </a>
 
-          <a href="/" class="logo-light">
+          <a href="/admin" class="logo-light">
                <img src="<?= base_url('assets/admin/images/logo-sm.png')?>" class="logo-sm" alt="logo sm">
                <img src="<?= base_url('assets/admin/images/logo-light.png')?>" class="logo-lg" alt="logo light">
           </a>

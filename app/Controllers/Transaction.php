@@ -571,7 +571,7 @@ class Transaction extends BaseController
         $pesanan = $this->transaksiModel->find($id);
 
         if (!$pesanan) {
-            return redirect()->to()->back()->with('error', 'Data tidak ditemukan.');
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Data tidak ditemukan.');
         }
 
         $data['transaksi'] = $pesanan;
@@ -583,7 +583,7 @@ class Transaction extends BaseController
 
         $data['payment'] = $this->paymentsModel
             ->where('id_transaksi', $pesanan['id_transaksi'])
-            ->findAll();
+            ->first();
 
         if ($pesanan['jenis'] === 'Jasa'){
             $data['dokumen'] = $this->dokumenJasaModel->where('id_transaksi', $pesanan['id_transaksi'])->first();
