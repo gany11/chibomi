@@ -31,12 +31,42 @@ class Account extends BaseController
     {
         $postData = $this->request->getPost();
 
-        // Validasi dulu data mentah
-        if (!$this->accountModel->validate($postData)) {
+        $validationRules = [
+            'email'            => 'required|valid_email|is_unique[accounts.email]',
+            'nama'             => 'required|string|max_length[255]',
+            'telepon'          => 'required|regex_match[/^[0-9]{10,20}$/]',
+            'password'         => 'required|min_length[8]',
+            'confirm_password' => 'required|matches[password]',
+        ];
+
+        $validationMessages = [
+            'email' => [
+                'required'    => 'Email wajib diisi.',
+                'valid_email' => 'Format email tidak valid.',
+                'is_unique'   => 'Email sudah terdaftar.',
+            ],
+            'nama' => [
+                'required' => 'Nama wajib diisi.',
+            ],
+            'telepon' => [
+                'required'     => 'Nomor telepon wajib diisi.',
+                'regex_match'  => 'Format nomor telepon tidak valid.',
+            ],
+            'password' => [
+                'required'    => 'Password wajib diisi.',
+                'min_length'  => 'Password minimal 8 karakter.',
+            ],
+            'confirm_password' => [
+                'required' => 'Konfirmasi password wajib diisi.',
+                'matches'  => 'Konfirmasi password tidak cocok.',
+            ],
+        ];
+
+        if (!$this->validate($validationRules, $validationMessages)) {
             return redirect()->back()
                 ->withInput()
-                ->with('errors', $this->accountModel->errors())
-                ->with('error', 'Registrasi gagal. Silakan coba lagi dengan ketentuan yang berlaku.');
+                ->with('errors', $this->validator->getErrors())
+                ->with('error', 'Registrasi gagal. Silakan periksa kembali data yang diisi.');
         }
 
         // Data yang akan disimpan

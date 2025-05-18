@@ -86,7 +86,7 @@ class Address extends BaseController
             // INSERT
             try {
                 if (!$this->addressModel->insert($data)) {
-                    return redirect()->back()->withInput()->with('errors', $this->addressModel->errors());
+                    return redirect()->back()->withInput()->with('errors', $this->addressModel->errors())->with('error', 'Gagal menyimpan alamat.');
                 }
                 return redirect()->to('/alamat')->with('success', 'Alamat berhasil disimpan.');
             } catch (\RuntimeException $e) {

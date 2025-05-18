@@ -75,7 +75,7 @@ echo view('master/header', [
                                     <td class="cart-product-price">Rp<?= number_format($item['price_unit'], 0, ',', '.') ?></td>
                                     <td class="cart-product-quantity">
                                         <div class="cart-plus-minus">
-                                            <input type="number" min="1" class="cart-plus-minus-box qty-input" data-id="<?= $item['id_cart'] ?>" value="<?= $item['qty'] ?>">
+                                            <input type="number" min="1" class="cart-plus-minus-box qty-input" data-id="<?= $item['id_cart'] ?>" value="<?= $item['qty'] ?>" readOnly>
                                         </div>
                                     </td>
                                     <td class="cart-product-subtotal">Rp<?= number_format($subtotal, 0, ',', '.') ?></td>

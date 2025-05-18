@@ -72,10 +72,10 @@
                                 <div class="float-sm-start">
                                     <h4 class="card-title">Dikeluarkan Oleh:</h4>
                                     <div class="mt-3">
-                                        <h4><?= $toko_nama ?? 'Nama Toko' ?></h4>
-                                        <p><?= $toko_alamat ?? 'Alamat toko di sini' ?></p>
-                                        <p><u>Telepon:</u> <?= $toko_telepon ?? '+62-812-3456-7890' ?></p>
-                                        <p><u>Email:</u> <?= $toko_email ?? 'email@tokomu.com' ?></p>
+                                        <h4><?= $toko_nama ?? 'Chibomi' ?></h4>
+                                        <p><?= $toko_alamat ?? 'Indonesia' ?></p>
+                                        <p><u>Telepon:</u> <?= $toko_telepon ?? '+62-878-7350-4007' ?></p>
+                                        <p><u>Email:</u> <?= $toko_email ?? 'websitechibomi@gmail.com' ?></p>
                                     </div>
                                 </div>
                                 <div class="float-sm-end">
