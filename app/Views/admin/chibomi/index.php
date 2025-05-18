@@ -3,6 +3,7 @@
 
 <head>
       <?php echo view("admin/partials/title-meta", array("title" => "Beranda - Admin")) ?>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
       <?= $this->include("admin/partials/head-css") ?>
 </head>
@@ -34,11 +35,18 @@
                                                             </div>
                                                        </div>
                                                        <div class="col-6 text-end">
-                                                            <p class="text-muted mb-0 text-truncate">Total Transaksi</p>
+                                                            <p class="text-muted mb-0 text-truncate">Transaksi Sedang Diproses</p>
                                                             <?php
-                                                            $totalTransaksi = array_sum(array_column($transaksiStats, 'total_transaksi'));
+                                                                 // Cari item dengan status 'Proses'
+                                                                 $sedangProses = 0;
+                                                                 foreach ($transaksiStats as $row) {
+                                                                      if (strtolower($row->status) === 'proses') {
+                                                                           $sedangProses = $row->total_transaksi;
+                                                                           break;
+                                                                      }
+                                                                 }
                                                             ?>
-                                                            <h3 class="text-dark mt-1 mb-0"><?= $totalTransaksi ?></h3>
+                                                            <h3 class="text-dark mt-1 mb-0"><?= $sedangProses ?></h3>
                                                        </div>
                                                   </div>
                                              </div>
@@ -58,11 +66,29 @@
                                                        <div class="col-6 text-end">
                                                             <p class="text-muted mb-0 text-truncate">Total Pendapatan</p>
                                                             <?php
-                                                            $totalUang = array_sum(array_column($transaksiStats, 'total_uang'));
+                                                            $totalUang = array_sum(array_column($transaksiStats2, 'total_uang'));
                                                             ?>
                                                             <h3 class="text-dark mt-1 mb-0">Rp<?= number_format($totalUang, 0, ',', '.') ?></h3>
                                                        </div>
                                                   </div>
+                                             </div>
+                                        </div>
+                                   </div>
+
+                                   <!-- Clustering -->
+                                   <div class="col-md-6 col-lg-6">
+                                        <div class="card overflow-hidden">
+                                             <div class="card-body">
+                                                  <canvas id="clusterChart" height="100"></canvas>
+                                             </div>
+                                        </div>
+                                   </div>
+
+                                   <!-- Total Transaksi -->
+                                   <div class="col-md-6 col-lg-6">
+                                        <div class="card overflow-hidden">
+                                             <div class="card-body">
+                                                  <canvas id="pendapatanChart" height="100"></canvas>
                                              </div>
                                         </div>
                                    </div>
@@ -204,6 +230,72 @@
      <!-- END Wrapper -->
 
      <?= $this->include("admin/partials/vendor-scripts") ?>
+
+     <script>
+          // Data Clustering
+          const clusterLabels = <?= json_encode(array_column($clusterData, 'nama')) ?>;
+          const clusterTransaksi = <?= json_encode(array_column($clusterData, 'jumlah')) ?>;
+          const clusterBelanja = <?= json_encode(array_column($clusterData, 'total')) ?>;
+
+          const ctxCluster = document.getElementById('clusterChart');
+          new Chart(ctxCluster, {
+               type: 'scatter',
+               data: {
+                    labels: clusterLabels,
+                    datasets: [{
+                         label: 'Jumlah Transaksi vs Total Belanja',
+                         data: clusterTransaksi.map((t, i) => ({x: t, y: clusterBelanja[i]})),
+                         backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    }]
+               },
+               options: {
+                    plugins: {
+                         tooltip: {
+                              callbacks: {
+                              label: function(context) {
+                                   const i = context.dataIndex;
+                                   return `${clusterLabels[i]}: ${context.raw.x} transaksi, Rp${context.raw.y}`;
+                              }
+                              }
+                         }
+                    },
+                    scales: {
+                         x: { title: { display: true, text: 'Jumlah Transaksi' } },
+                         y: { title: { display: true, text: 'Total Belanja (Rp)' } }
+                    }
+               }
+          });
+
+          // Data Pendapatan Harian
+          const pendapatanLabel = <?= json_encode(array_column($pendapatan, 'tanggal')) ?>;
+          const pendapatanData = <?= json_encode(array_map('intval', array_column($pendapatan, 'total'))) ?>;
+
+          const ctxPendapatan = document.getElementById('pendapatanChart');
+          new Chart(ctxPendapatan, {
+               type: 'line',
+               data: {
+                    labels: pendapatanLabel,
+                    datasets: [{
+                         label: 'Pendapatan Harian',
+                         data: pendapatanData,
+                         borderColor: '#4e73df',
+                         backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                         fill: true
+                    }]
+               },
+               options: {
+                    scales: {
+                         y: {
+                              beginAtZero: true,
+                              title: { display: true, text: 'Jumlah Pendapatan (Rp)' }
+                         },
+                         x: {
+                              title: { display: true, text: 'Tanggal' }
+                         }
+                    }
+               }
+          });
+     </script>
 
      <!-- Vector Map Js -->
      <script src="/vendor/jsvectormap/jsvectormap.min.js"></script>

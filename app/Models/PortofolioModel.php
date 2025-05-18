@@ -54,44 +54,72 @@ class PortofolioModel extends Model
 
     public function getRecommendedPortofolio($idAccount = null)
     {
+        $recommended = [];
+
         if ($idAccount) {
-            // Subquery berdasarkan aktivitas user (akun atau IP)
+            // Ambil maksimal 4 portofolio terakhir yang dilihat user
             $builder = $this->db->table('view_portfolio vp')
                 ->select('vp.id_portofolio')
                 ->where('vp.id_account', $idAccount)
                 ->orderBy('vp.tanggal', 'DESC')
                 ->limit(4);
 
-            $subQuery = $builder->getCompiledSelect();
+            $recentViews = $builder->get()->getResult();
 
-            return $this->select('portofolio.judul, portofolio.slug, ip.file')
-                ->join('view_portfolio vp2', 'vp2.id_portofolio = portofolio.id_portofolio')
-                ->join('images_portofolio ip', 'ip.id_portofolio = portofolio.id_portofolio AND ip.keterangan = "Cover"', 'left')
-                ->where("vp2.id_portofolio IN (
-                    SELECT id_portofolio FROM ($subQuery) AS recent_views
-                )")
-                ->where('portofolio.deleted_at', null)
-                ->where('portofolio.drafted_at', null)
-                ->groupBy('portofolio.id_portofolio')
-                ->limit(4)
-                ->findAll();
-        } else {
-            // Rekomendasi universal: portofolio dengan view terbanyak
-            return $this->select('
-                    portofolio.judul,
-                    portofolio.slug,
-                    ip.file,
-                    COUNT(vp.id_portofolio) AS total_view
-                ')
+            if (!empty($recentViews)) {
+                $subQuery = $builder->getCompiledSelect();
+
+                $recommended = $this->select('
+                                        portofolio.id_portofolio,
+                                        portofolio.judul,
+                                        portofolio.slug,
+                                        ip.file
+                                    ')
+                    ->join('view_portfolio vp2', 'vp2.id_portofolio = portofolio.id_portofolio')
+                    ->join('images_portofolio ip', 'ip.id_portofolio = portofolio.id_portofolio AND ip.keterangan = "Cover"', 'left')
+                    ->where("vp2.id_portofolio IN (
+                        SELECT id_portofolio FROM ($subQuery) AS recent_views
+                    )")
+                    ->where('portofolio.deleted_at', null)
+                    ->where('portofolio.drafted_at', null)
+                    ->groupBy('portofolio.id_portofolio')
+                    ->limit(4)
+                    ->findAll();
+            }
+        }
+
+        // Hitung berapa tambahan yang dibutuhkan
+        $needed = 4 - count($recommended);
+
+        if ($needed > 0) {
+            // Ambil portofolio populer sebagai pelengkap, hindari duplikat
+            $excludeIds = array_column($recommended, 'id_portofolio');
+
+            $builder = $this->select('
+                                portofolio.id_portofolio,
+                                portofolio.judul,
+                                portofolio.slug,
+                                ip.file,
+                                COUNT(vp.id_portofolio) AS total_view
+                            ')
                 ->join('view_portfolio vp', 'vp.id_portofolio = portofolio.id_portofolio', 'left')
                 ->join('images_portofolio ip', 'ip.id_portofolio = portofolio.id_portofolio AND ip.keterangan = "Cover"', 'left')
                 ->where('portofolio.deleted_at', null)
                 ->where('portofolio.drafted_at', null)
                 ->groupBy('portofolio.id_portofolio')
                 ->orderBy('total_view', 'DESC')
-                ->limit(4)
-                ->findAll();
+                ->limit($needed);
+
+            if (!empty($excludeIds)) {
+                $builder->whereNotIn('portofolio.id_portofolio', $excludeIds);
+            }
+
+            $general = $builder->findAll();
+
+            $recommended = array_merge($recommended, $general);
         }
+
+        return $recommended;
     }
 
 }

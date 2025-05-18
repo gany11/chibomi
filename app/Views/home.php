@@ -11,7 +11,7 @@ echo view('master/header', [
             <div class="ltn__slide-item-inner">
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-12 align-self-center">
+                        <div class="col-lg-12 align-self-center p-5">
                             <div class="slide-item-info">
                                 <div class="slide-item-info-inner ltn__slide-animation pt-5">
                                     <h6 class="slide-sub-title animated"></h6>
@@ -255,7 +255,7 @@ echo view('master/header', [
                         <div class="btn-wrapper mb-30">
                             <a href="<?= base_url('/kontak') ?>" class="theme-btn-4 btn">Hubungi Kami</a>
                         </div>
-                        <h3><i class="fas fa-phone"></i> +62-878-7350-4007</h3>
+                        <h3><i class="fas fa-phone"></i> <a href="https://wa.me/6287873504007">+62-878-7350-4007</a></h3>
                     </div>
                 </div>
             </div>

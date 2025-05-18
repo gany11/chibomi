@@ -199,7 +199,10 @@ class Transaction extends BaseController
     {
         $idAccount = session()->get('id_account');
 
-        $data['pesanan'] = $this->transaksiModel->where('id_account', $idAccount)->findAll();
+        $data['pesanan'] = $this->transaksiModel
+            ->where('id_account', $idAccount)
+            ->orderBy("FIELD(status, 'Pending', 'Proses', 'Kirim', 'Selesai', 'Batal')", '', false)
+            ->findAll();
 
         return view('transaction/pesanan', $data);
     }

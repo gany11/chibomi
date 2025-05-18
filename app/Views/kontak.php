@@ -32,21 +32,22 @@ echo view('master/header', [
             <div class="col-lg-4 h-100">
                 <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow h-100">
                     <div class="ltn__contact-address-icon">
-                        <img src="<?php echo base_url('assets/img/icons/email.png')?>" alt="Icon Image">
+                        <img src="<?php echo base_url('assets/img/icons/email.png') ?>" alt="Icon Image">
                     </div>
                     <h3>Email</h3>
-                    <p>websitechibomi@gmail.com</p>
+                    <p><a href="mailto:websitechibomi@gmail.com">websitechibomi@gmail.com</a></p>
                 </div>
             </div>
             <div class="col-lg-4 h-100">
                 <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow h-100">
                     <div class="ltn__contact-address-icon">
-                        <img src="<?php echo base_url('assets/img/icons/phone.png')?>" alt="Icon Image">
+                        <img src="<?php echo base_url('assets/img/icons/phone.png') ?>" alt="Icon Image">
                     </div>
                     <h3>Telepon</h3>
-                    <p>+62-878-7350-4007</p>
+                    <p><a href="https://wa.me/6287873504007">+62-878-7350-4007</a></p>
                 </div>
             </div>
+
             <div class="col-lg-4 h-100">
                 <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow h-100">
                     <div class="ltn__contact-address-icon">

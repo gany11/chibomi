@@ -34,7 +34,7 @@
                         <div class="col">
                             <div class="site-logo-wrap">
                                 <div class="site-logo">
-                                    <a href="index.html"><img src="<?php echo base_url('assets/img/logo-2.png')?>" alt="Logo"></a>
+                                    <a href="<?php echo base_url('/')?>"><img src="<?php echo base_url('assets/img/logo-2.png')?>" alt="Logo"></a>
                                 </div>
                             </div>
                         </div>
@@ -81,6 +81,10 @@
                                             <li><a href="<?= base_url('/profil') ?>">Profil</a></li>
                                             <?php if ((session()->get('role') === "Pemilik") || (session()->get('role') === "Admin")): ?>
                                                 <li><a href="<?= base_url('/admin') ?>">Mode Admin</a></li>
+                                            <?php endif; ?>
+                                            <?php if (session()->has('id_account') && (session()->get('role') === 'Pelanggan')): ?>
+                                                <li><a href="<?= base_url('/pesanan') ?>">Pesanan Saya</a></li>
+                                                <li><a href="<?= base_url('/alamat') ?>">Alamat</a></li>
                                             <?php endif; ?>
                                             <li><a class="logout" href="<?= base_url('/logout') ?>">Logout</a></li>
                                         </div>
@@ -141,7 +145,6 @@
                         <li><a href="<?php echo base_url('/')?>">Beranda</a></li>
                         <li><a href="<?php echo base_url('/produk')?>">Produk</a></li>
                         <li><a href="<?php echo base_url('/portofolio')?>">Portofolio</a></li>
-                        <!-- <li><a href="<?php echo base_url('/tentang-kami')?>">Tentang Kami</li> -->
                         <li><a href="<?php echo base_url('/kontak')?>">Kontak</a></li>
                     </ul>
                 </div>

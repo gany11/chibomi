@@ -87,6 +87,59 @@ class Home extends BaseController
             ->groupBy('status')
             ->get()
             ->getResult();
+        
+        $transaksiStats2 = $db->table('transaksi')
+            ->select('status, COUNT(*) as total_transaksi, SUM(total_price_producta) as total_uang')
+            ->whereNotIn('status', ['Pending', 'Batal'])
+            ->groupBy('status')
+            ->get()
+            ->getResult();
+        
+        // Transaksi valid (tidak termasuk Pending dan Batal)
+        $transaksiValid = $db->table('transaksi t')
+        ->select('t.id_transaksi, t.id_account, p.amount, p.paid_at')
+        ->join('payments p', 'p.id_transaksi = t.id_transaksi')
+        ->whereNotIn('t.status', ['Pending', 'Batal'])
+        ->get()->getResult();
+
+        // Clustering pelanggan: jumlah transaksi dan total belanja
+        $clustering = [];
+        foreach ($transaksiValid as $row) {
+            $id = $row->id_account;
+            if (!isset($clustering[$id])) {
+                $clustering[$id] = ['jumlah' => 0, 'total' => 0];
+            }
+            $clustering[$id]['jumlah'] += 1;
+            $clustering[$id]['total'] += $row->amount;
+        }
+
+        // Ambil nama akun (opsional)
+        $accounts = $db->table('accounts')->select('id_account, nama')->get()->getResult();
+        foreach ($accounts as $acc) {
+            if (isset($clustering[$acc->id_account])) {
+                $clustering[$acc->id_account]['nama'] = $acc->nama;
+            }
+        }
+
+        // Konversi ke array untuk view
+        $clusterData = [];
+        foreach ($clustering as $id => $val) {
+            $clusterData[] = [
+                'id' => $id,
+                'nama' => $val['nama'] ?? 'Tidak diketahui',
+                'jumlah' => $val['jumlah'],
+                'total' => $val['total']
+            ];
+        }
+
+        // Pendapatan harian
+        $pendapatan = $db->table('transaksi t')
+            ->select('DATE(p.paid_at) as tanggal, SUM(p.amount) as total')
+            ->join('payments p', 'p.id_transaksi = t.id_transaksi')
+            ->whereNotIn('t.status', ['Pending', 'Batal'])
+            ->groupBy('DATE(p.paid_at)')
+            ->orderBy('tanggal', 'ASC')
+            ->get()->getResult();
 
         return view('admin/chibomi/index', [
             'topSearches' => $topSearches,
@@ -95,7 +148,10 @@ class Home extends BaseController
             'topViewedProducts' => $topViewedProducts,
             'topOrderedProducts' => $topOrderedProducts,
             'topViewedPortfolios' => $topViewedPortfolios,
-            'transaksiStats' => $transaksiStats
+            'transaksiStats' => $transaksiStats,
+            'transaksiStats2' => $transaksiStats2,
+            'clusterData' => $clusterData,
+            'pendapatan' => $pendapatan
         ]);
     }
 
