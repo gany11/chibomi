@@ -48,7 +48,6 @@ class ProductModel extends Model
         $recommended = [];
 
         if ($idAccount) {
-            // Ambil maksimal 5 produk terakhir yang dilihat user
             $builder = $this->db->table('view_product vp')
                 ->select('vp.id_product')
                 ->where('vp.id_account', $idAccount)

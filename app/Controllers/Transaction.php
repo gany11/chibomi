@@ -139,7 +139,7 @@ class Transaction extends BaseController
         foreach ($listOrder as $item) {
             $item_details[] = [
                 'id' => $item['id_product'],
-                'price' => $item['total_price'],
+                'price' => $item['total_price'] / $item['qty'],
                 'quantity' => $item['qty'],
                 'name' => $item['nama_produk'],
             ];
