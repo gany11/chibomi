@@ -78,8 +78,11 @@
                                    <!-- Clustering -->
                                    <div class="col-md-6 col-lg-6">
                                         <div class="card overflow-hidden">
+                                             <div class="card-header p-3 text-center">
+                                                  <h5 class="card-title">Clustering Pelanggan</h5>
+                                             </div>
                                              <div class="card-body">
-                                                  <canvas id="clusterChart" height="100"></canvas>
+                                                  <canvas id="clusterChart" height="200"></canvas>
                                              </div>
                                         </div>
                                    </div>
@@ -87,8 +90,11 @@
                                    <!-- Total Transaksi -->
                                    <div class="col-md-6 col-lg-6">
                                         <div class="card overflow-hidden">
+                                             <div class="card-header p-3 text-center">
+                                                  <h5 class="card-title">Grafik Pendapatan Harian</h5>
+                                             </div>
                                              <div class="card-body">
-                                                  <canvas id="pendapatanChart" height="100"></canvas>
+                                                  <canvas id="pendapatanChart" height="200"></canvas>
                                              </div>
                                         </div>
                                    </div>
@@ -216,12 +222,12 @@
                                              </div>
                                         </div>
                                    </div>
-
                               </div>
                          </div>
                     </div>
                </div>
           </div>
+          <?= $this->include("admin/partials/footer") ?>
           <!-- ==================================================== -->
           <!-- End Page Content -->
           <!-- ==================================================== -->
@@ -232,39 +238,58 @@
      <?= $this->include("admin/partials/vendor-scripts") ?>
 
      <script>
-          // Data Clustering
-          const clusterLabels = <?= json_encode(array_column($clusterData, 'nama')) ?>;
-          const clusterTransaksi = <?= json_encode(array_column($clusterData, 'jumlah')) ?>;
-          const clusterBelanja = <?= json_encode(array_column($clusterData, 'total')) ?>;
+          const clusterData = <?= json_encode($clusteredData) ?>;
 
-          const ctxCluster = document.getElementById('clusterChart');
-          new Chart(ctxCluster, {
+          const datasets = [[], []];
+          clusterData.forEach(d => {
+               datasets[d.cluster].push({
+                    x: d.jumlah,
+                    y: d.total,
+                    nama: d.nama,
+                    email: d.email
+               });
+               });
+
+               const colors = ['rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)'];
+
+               const ctxCluster = document.getElementById('clusterChart');
+               new Chart(ctxCluster, {
                type: 'scatter',
                data: {
-                    labels: clusterLabels,
-                    datasets: [{
-                         label: 'Jumlah Transaksi vs Total Belanja',
-                         data: clusterTransaksi.map((t, i) => ({x: t, y: clusterBelanja[i]})),
-                         backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                    }]
+                    datasets: datasets.map((data, i) => ({
+                         label: 'Cluster ' + (i + 1),
+                         data: data,
+                         backgroundColor: colors[i]
+                    }))
                },
                options: {
                     plugins: {
                          tooltip: {
                               callbacks: {
-                              label: function(context) {
-                                   const i = context.dataIndex;
-                                   return `${clusterLabels[i]}: ${context.raw.x} transaksi, Rp${context.raw.y}`;
-                              }
+                                   label: function(context) {
+                                   const item = context.raw;
+                                   return `${item.nama} (${item.email}): ${item.x} transaksi, Rp${item.y}`;
+                                   }
                               }
                          }
                     },
                     scales: {
-                         x: { title: { display: true, text: 'Jumlah Transaksi' } },
-                         y: { title: { display: true, text: 'Total Belanja (Rp)' } }
+                         x: {
+                              title: {
+                                   display: true,
+                                   text: 'Jumlah Transaksi'
+                              }
+                         },
+                         y: {
+                              title: {
+                                   display: true,
+                                   text: 'Total Belanja (Rp)'
+                              }
+                         }
                     }
                }
           });
+
 
           // Data Pendapatan Harian
           const pendapatanLabel = <?= json_encode(array_column($pendapatan, 'tanggal')) ?>;
@@ -304,7 +329,6 @@
 
      <!-- Dashboard Js -->
      <script src="/js/pages/dashboard.js"></script>
-
 </body>
 
 </html>

@@ -113,24 +113,102 @@ class Home extends BaseController
             $clustering[$id]['total'] += $row->amount;
         }
 
-        // Ambil nama akun (opsional)
-        $accounts = $db->table('accounts')->select('id_account, nama')->get()->getResult();
+        // Ambil info nama dan email akun
+        $accounts = $db->table('accounts')->select('id_account, nama, email')->get()->getResult();
         foreach ($accounts as $acc) {
             if (isset($clustering[$acc->id_account])) {
                 $clustering[$acc->id_account]['nama'] = $acc->nama;
+                $clustering[$acc->id_account]['email'] = $acc->email;
             }
         }
 
-        // Konversi ke array untuk view
-        $clusterData = [];
+        $clustering = [];
+        foreach ($transaksiValid as $row) {
+            $id = $row->id_account;
+            if (!isset($clustering[$id])) {
+                $clustering[$id] = ['jumlah' => 0, 'total' => 0];
+            }
+            $clustering[$id]['jumlah'] += 1;
+            $clustering[$id]['total'] += $row->amount;
+        }
+
+        // Ambil nama & email akun dan gabungkan
+        $accounts = $db->table('accounts')->select('id_account, nama, email')->get()->getResult();
+        foreach ($accounts as $acc) {
+            if (isset($clustering[$acc->id_account])) {
+                $clustering[$acc->id_account]['nama'] = $acc->nama;
+                $clustering[$acc->id_account]['email'] = $acc->email;
+            }
+        }
+
+        // Siapkan array numerik
+        $clusterData = [];      // Untuk view
+        $points = [];           // Untuk clustering
+        $indexToId = [];        // Mapping index -> id_account
+
         foreach ($clustering as $id => $val) {
-            $clusterData[] = [
+            $clusterData[$id] = [
                 'id' => $id,
                 'nama' => $val['nama'] ?? 'Tidak diketahui',
+                'email' => $val['email'] ?? '-',
                 'jumlah' => $val['jumlah'],
-                'total' => $val['total']
+                'total' => $val['total'],
+                'cluster' => null // default
             ];
+            $points[] = [$val['jumlah'], $val['total']];
+            $indexToId[] = $id;
         }
+
+        // Lakukan clustering hanya jika ada minimal 2 pelanggan
+        if (count($points) >= 2) {
+            $k = 2;
+            $maxIter = 100;
+            $centroids = [$points[0], $points[1]];
+            $assignments = [];
+
+            for ($iter = 0; $iter < $maxIter; $iter++) {
+                $newAssignments = [];
+                foreach ($points as $i => $p) {
+                    $dists = [];
+                    foreach ($centroids as $c) {
+                        $dists[] = pow($p[0] - $c[0], 2) + pow($p[1] - $c[1], 2);
+                    }
+                    $newAssignments[$i] = array_search(min($dists), $dists);
+                }
+
+                if ($assignments === $newAssignments) break;
+                $assignments = $newAssignments;
+
+                $sums = array_fill(0, $k, [0, 0]);
+                $counts = array_fill(0, $k, 0);
+                foreach ($points as $i => $p) {
+                    $cluster = $assignments[$i];
+                    $sums[$cluster][0] += $p[0];
+                    $sums[$cluster][1] += $p[1];
+                    $counts[$cluster]++;
+                }
+
+                for ($j = 0; $j < $k; $j++) {
+                    if ($counts[$j] > 0) {
+                        $centroids[$j] = [$sums[$j][0] / $counts[$j], $sums[$j][1] / $counts[$j]];
+                    }
+                }
+            }
+
+            // Gabungkan hasil klaster ke data berdasarkan index
+            foreach ($assignments as $i => $clusterIndex) {
+                $id = $indexToId[$i];
+                $clusterData[$id]['cluster'] = $clusterIndex;
+            }
+        } else {
+            // Hanya satu pelanggan, set cluster = 0
+            foreach ($clusterData as &$data) {
+                $data['cluster'] = 0;
+            }
+        }
+
+        // Reset index array agar cocok dengan foreach di view
+        $clusterData = array_values($clusterData);
 
         // Pendapatan harian
         $pendapatan = $db->table('transaksi t')
@@ -150,7 +228,7 @@ class Home extends BaseController
             'topViewedPortfolios' => $topViewedPortfolios,
             'transaksiStats' => $transaksiStats,
             'transaksiStats2' => $transaksiStats2,
-            'clusterData' => $clusterData,
+            'clusteredData' => $clusterData,
             'pendapatan' => $pendapatan
         ]);
     }

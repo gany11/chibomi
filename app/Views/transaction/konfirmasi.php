@@ -75,7 +75,7 @@ echo view('master/header', ['title' => 'Konfirmasi Pesanan']);
                         </div>
                         
                         <div class="row">
-                            <div class="col-lg-6 p-3">
+                            <div class="col-lg-12 p-3">
                                 <!-- Alamat & Jasa -->
                                 <h4>Pilih Alamat Pengiriman</h4>
                                 <?php if (!empty($alamat)): ?>
@@ -91,7 +91,7 @@ echo view('master/header', ['title' => 'Konfirmasi Pesanan']);
                                 <?php endif; ?>
                             </div>
 
-                            <div class="col-lg-6 p-3">
+                            <div class="col-lg-12 p-3">
                                 <h4>Pilih Jasa Pengiriman</h4>
                                 <div class="form-group">
                                     <select class="form-control" id="jasa" style="display: none;" name="jasa"></select>
@@ -347,6 +347,7 @@ echo view('master/header', ['title' => 'Konfirmasi Pesanan']);
         });
     });
 </script>
+
 <script>
     document.getElementById('checkout-jasa').addEventListener('click', function () {
         const alertContainer = document.getElementById('alert-container') || document.createElement('div');
