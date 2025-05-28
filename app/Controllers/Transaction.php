@@ -647,7 +647,7 @@ class Transaction extends BaseController
                     $data['tracking'] = $body['data'] ?? null;
                 } catch (\Exception $e) {
                     $data['tracking'] = null;
-                    $data['error'] = 'Gagal mengambil data tracking: ' . $e->getMessage();
+                    $data['error'] = 'Gagal mengambil data tracking! Resi pengiriman tidak vaid. ';
                 }
             } else {
                 $data['error'] = 'Informasi resi atau kurir tidak tersedia.';
